@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { 
@@ -14,7 +14,9 @@ import {
   Lock,
   Briefcase,
   ExternalLink,
-  ChevronRight
+  ChevronRight,
+  Send,
+  Bot
 } from 'lucide-react';
 import { formatCurrency } from '@/lib/utils';
 import { AuditInput } from '@/lib/audit-engine';
@@ -51,6 +53,64 @@ interface AuditRecord {
   created_at: string;
 }
 
+function formatMessageContent(text: string) {
+  const lines = text.split('\n');
+  return lines.map((line, idx) => {
+    let cleanLine = line;
+    let isBullet = false;
+    let isHeader = false;
+
+    if (line.trim().startsWith('* ')) {
+      cleanLine = line.trim().substring(2);
+      isBullet = true;
+    } else if (line.trim().startsWith('- ')) {
+      cleanLine = line.trim().substring(2);
+      isBullet = true;
+    } else if (line.trim().startsWith('### ')) {
+      cleanLine = line.trim().substring(4);
+      isHeader = true;
+    }
+
+    const boldRegex = /\*\*(.*?)\*\*/g;
+    const parts = [];
+    let lastIndex = 0;
+    let match;
+    
+    while ((match = boldRegex.exec(cleanLine)) !== null) {
+      if (match.index > lastIndex) {
+        parts.push(cleanLine.substring(lastIndex, match.index));
+      }
+      parts.push(<strong key={match.index} className="font-bold text-white">{match[1]}</strong>);
+      lastIndex = boldRegex.lastIndex;
+    }
+    if (lastIndex < cleanLine.length) {
+      parts.push(cleanLine.substring(lastIndex));
+    }
+
+    const rendered = parts.length > 0 ? parts : cleanLine;
+
+    if (isBullet) {
+      return (
+        <li key={idx} className="ml-4 list-disc text-slate-300 my-0.5">
+          {rendered}
+        </li>
+      );
+    }
+    if (isHeader) {
+      return (
+        <h4 key={idx} className="text-sm font-bold text-emerald-400 mt-3 mb-1">
+          {rendered}
+        </h4>
+      );
+    }
+    return (
+      <p key={idx} className="my-1.5 min-h-[1em]">
+        {rendered}
+      </p>
+    );
+  });
+}
+
 export default function ResultsPage() {
   const params = useParams();
   const id = params.id as string;
@@ -71,6 +131,70 @@ export default function ResultsPage() {
   const [leadError, setLeadError] = useState<string | null>(null);
 
   const [shareCopied, setShareCopied] = useState(false);
+
+  // Spend Copilot Chat State
+  const [messages, setMessages] = useState<{ role: 'user' | 'assistant'; content: string }[]>([]);
+  const [chatInput, setChatInput] = useState('');
+  const [chatLoading, setChatLoading] = useState(false);
+  const [chatError, setChatError] = useState<string | null>(null);
+
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!audit) return;
+    const savingsFormatted = formatCurrency(audit.results_data.totalMonthlySavings);
+    const timer = setTimeout(() => {
+      setMessages([
+        {
+          role: 'assistant',
+          content: `Hi! I am the **Spend Copilot** 🤖.\n\nI have parsed your AI tool stack and identified **${savingsFormatted}/mo** in total savings. \n\nAsk me how to negotiate with vendors, standardise developers on Cursor, or get Credex credits!`
+        }
+      ]);
+    }, 0);
+    return () => clearTimeout(timer);
+  }, [audit]);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
+
+  const handleSendMessage = async (textToSend?: string) => {
+    const messageText = textToSend || chatInput;
+    if (!messageText.trim() || chatLoading) return;
+
+    if (!textToSend) {
+      setChatInput('');
+    }
+
+    const newMessages = [...messages, { role: 'user' as const, content: messageText }];
+    setMessages(newMessages);
+    setChatLoading(true);
+    setChatError(null);
+
+    try {
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          messages: newMessages,
+          auditId: id
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to reach Copilot. Please try again.');
+      }
+
+      const data = await response.json();
+      setMessages(prev => [...prev, { role: 'assistant', content: data.content }]);
+    } catch (err: unknown) {
+      setChatError(err instanceof Error ? err.message : 'Connection to Copilot timed out.');
+    } finally {
+      setChatLoading(false);
+    }
+  };
 
   // 1. Fetch Audit Data
   useEffect(() => {
@@ -246,14 +370,127 @@ export default function ResultsPage() {
         </div>
       </div>
 
-      {/* 2. Personalized AI Summary Card */}
-      <div className="glass p-6 sm:p-8 rounded-2xl border-emerald-500/10 shadow-lg shadow-emerald-500/5 space-y-4">
-        <h2 className="font-display font-extrabold text-base sm:text-lg text-white flex items-center gap-2">
-          <Sparkles className="h-5 w-5 text-emerald-400 shrink-0" />
-          <span>Personalized AI Audit Summary</span>
-        </h2>
-        <div className="prose prose-invert prose-xs text-slate-300 max-w-none text-xs sm:text-sm leading-relaxed border-t border-slate-800/80 pt-4 whitespace-pre-line">
-          {ai_summary}
+      {/* 2. AI Summary & Spend Copilot Layout */}
+      <div className="grid lg:grid-cols-5 gap-6 animate-fade-in">
+        {/* Left Column: Personalized AI Summary */}
+        <div className="glass p-6 sm:p-8 rounded-2xl border-emerald-500/10 shadow-lg shadow-emerald-500/5 space-y-4 lg:col-span-3 flex flex-col justify-between">
+          <div className="space-y-4">
+            <h2 className="font-display font-extrabold text-base sm:text-lg text-white flex items-center gap-2">
+              <Sparkles className="h-5 w-5 text-emerald-400 shrink-0" />
+              <span>Personalized AI Audit Summary</span>
+            </h2>
+            <div className="prose prose-invert prose-xs text-slate-300 max-w-none text-xs sm:text-sm leading-relaxed border-t border-slate-800/80 pt-4 whitespace-pre-line">
+              {ai_summary}
+            </div>
+          </div>
+        </div>
+
+        {/* Right Column: Spend Copilot Chatbox */}
+        <div className="glass p-5 rounded-2xl border-slate-800 shadow-lg lg:col-span-2 flex flex-col h-[400px] justify-between relative overflow-hidden">
+          {/* Header */}
+          <div className="flex items-center gap-2 border-b border-slate-800/85 pb-2.5">
+            <Bot className="h-4.5 w-4.5 text-emerald-400 shrink-0" />
+            <div>
+              <h3 className="font-display font-extrabold text-xs text-white">Spend Copilot</h3>
+              <span className="text-[9px] text-emerald-400 font-semibold uppercase tracking-wider block">Interactive Advisor</span>
+            </div>
+          </div>
+
+          {/* Messages Area */}
+          <div className="flex-1 overflow-y-auto space-y-3 py-3 pr-1 scrollbar-thin scrollbar-thumb-slate-850 scrollbar-track-transparent">
+            {messages.map((msg, index) => {
+              const isUser = msg.role === 'user';
+              return (
+                <div
+                  key={index}
+                  className={`flex ${isUser ? 'justify-end' : 'justify-start'}`}
+                >
+                  <div
+                    className={`max-w-[90%] rounded-2xl px-3 py-2 text-[11px] leading-relaxed ${
+                      isUser
+                        ? 'bg-emerald-500 text-slate-950 font-medium rounded-br-none'
+                        : 'bg-slate-900 border border-slate-800/80 text-slate-300 rounded-bl-none'
+                    }`}
+                  >
+                    {isUser ? msg.content : formatMessageContent(msg.content)}
+                  </div>
+                </div>
+              );
+            })}
+            
+            {chatLoading && (
+              <div className="flex justify-start">
+                <div className="bg-slate-900 border border-slate-800 rounded-2xl rounded-bl-none px-3.5 py-2.5 text-slate-400 flex items-center gap-2">
+                  <div className="flex space-x-1 shrink-0">
+                    <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                    <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                    <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                  </div>
+                  <span className="text-[9px] tracking-wide">Copilot is analyzing...</span>
+                </div>
+              </div>
+            )}
+            
+            {chatError && (
+              <div className="p-2 bg-rose-500/10 border border-rose-500/20 text-rose-400 rounded-xl text-[9px] flex items-center gap-1.5">
+                <AlertCircle className="h-3 w-3 shrink-0" />
+                <span>{chatError}</span>
+              </div>
+            )}
+            <div ref={messagesEndRef} />
+          </div>
+
+          {/* Quick Suggestion Chips (only when not loading & only welcome message) */}
+          {messages.length === 1 && !chatLoading && (
+            <div className="flex flex-wrap gap-1 mb-2">
+              <button
+                type="button"
+                onClick={() => handleSendMessage('Why drop GitHub Copilot?')}
+                className="bg-slate-950 border border-slate-800 hover:border-slate-700 text-slate-400 hover:text-slate-200 text-[9px] px-2 py-0.5 rounded-full transition cursor-pointer"
+              >
+                💡 Why drop Copilot?
+              </button>
+              <button
+                type="button"
+                onClick={() => handleSendMessage('Should we standardise on Claude?')}
+                className="bg-slate-950 border border-slate-800 hover:border-slate-700 text-slate-400 hover:text-slate-200 text-[9px] px-2 py-0.5 rounded-full transition cursor-pointer"
+              >
+                💬 Standardise on Claude?
+              </button>
+              <button
+                type="button"
+                onClick={() => handleSendMessage('How do we claim Credex credits?')}
+                className="bg-slate-950 border border-slate-800 hover:border-slate-700 text-slate-400 hover:text-slate-200 text-[9px] px-2 py-0.5 rounded-full transition cursor-pointer"
+              >
+                🚀 Claim Credex Credits?
+              </button>
+            </div>
+          )}
+
+          {/* Chat Form */}
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleSendMessage();
+            }}
+            className="flex gap-2 border-t border-slate-800/80 pt-2.5 mt-0.5"
+          >
+            <input
+              type="text"
+              value={chatInput}
+              onChange={(e) => setChatInput(e.target.value)}
+              placeholder="Ask a question or add context..."
+              disabled={chatLoading}
+              className="flex-1 bg-slate-950 border border-slate-850 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 text-slate-200 py-2 px-3 rounded-xl text-[11px] transition outline-none font-medium"
+            />
+            <button
+              type="submit"
+              disabled={chatLoading || !chatInput.trim()}
+              className="bg-emerald-500 hover:bg-emerald-600 disabled:opacity-50 text-slate-950 p-2 rounded-xl transition cursor-pointer flex items-center justify-center shrink-0"
+            >
+              <Send className="h-3.5 w-3.5" />
+            </button>
+          </form>
         </div>
       </div>
 

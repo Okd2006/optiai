@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import { PRICING_DATA } from '@/lib/pricing-data';
 import { 
   TrendingDown, 
-  Plus, 
   Trash2, 
   ArrowRight, 
   Sparkles, 
@@ -20,6 +19,17 @@ interface ToolFormInput {
   seats: number;
   monthlySpend: number;
 }
+
+const TOOL_LOGOS: Record<string, { logo: string; color: string; bgGlow: string }> = {
+  cursor: { logo: 'Cu', color: 'text-emerald-400 border-emerald-500/30', bgGlow: 'bg-emerald-500/5' },
+  copilot: { logo: 'Gh', color: 'text-violet-400 border-violet-500/30', bgGlow: 'bg-violet-500/5' },
+  claude: { logo: 'Cl', color: 'text-amber-505 border-amber-500/30', bgGlow: 'bg-amber-500/5' },
+  chatgpt: { logo: 'Gpt', color: 'text-teal-400 border-teal-500/30', bgGlow: 'bg-teal-500/5' },
+  gemini: { logo: 'Ge', color: 'text-blue-400 border-blue-500/30', bgGlow: 'bg-blue-500/5' },
+  windsurf: { logo: 'Ws', color: 'text-cyan-400 border-cyan-500/30', bgGlow: 'bg-cyan-500/5' },
+  openai_api: { logo: 'Oai', color: 'text-teal-505 border-teal-600/30', bgGlow: 'bg-teal-600/5' },
+  anthropic_api: { logo: 'Ant', color: 'text-orange-400 border-orange-500/30', bgGlow: 'bg-orange-500/5' }
+};
 
 export default function AuditFormPage() {
   const router = useRouter();
@@ -76,30 +86,34 @@ export default function AuditFormPage() {
   // Available tools
   const availableToolsList = Object.values(PRICING_DATA);
 
-  // Helper to handle tool selection change
-  const handleToolChange = (index: number, toolId: string) => {
-    if (!Array.isArray(tools) || !tools[index]) return;
-    const pricing = PRICING_DATA[toolId];
-    if (!pricing) return;
-
-    const defaultPlan = pricing.plans[0]?.name || '';
-    const pricePerSeat = pricing.plans[0]?.pricePerUserMonth ?? 0;
-    const defaultSeats = tools[index].seats || 1;
-    
-    // API spend defaults are custom, otherwise standard plan prices
-    let defaultSpend = pricePerSeat * defaultSeats;
-    if (pricing.plans[0]?.billingFrequency === 'usage') {
-      defaultSpend = 50; // default estimated usage spend
+  // Helper to handle visual tool selection toggling
+  const toggleToolSelection = (toolId: string) => {
+    if (!Array.isArray(tools)) return;
+    const existingIndex = tools.findIndex(t => t.toolId === toolId);
+    if (existingIndex > -1) {
+      // Deselect tool -> remove it
+      const updated = tools.filter(t => t.toolId !== toolId);
+      setTools(updated);
+    } else {
+      // Select tool -> add it
+      const pricing = PRICING_DATA[toolId];
+      if (!pricing) return;
+      
+      const defaultPlan = pricing.plans[0]?.name || '';
+      const pricePerSeat = pricing.plans[0]?.pricePerUserMonth ?? 0;
+      const defaultSeats = 1;
+      const defaultSpend = pricing.plans[0]?.billingFrequency === 'usage' ? 50 : pricePerSeat * defaultSeats;
+      
+      setTools([
+        ...tools,
+        {
+          toolId,
+          planName: defaultPlan,
+          seats: defaultSeats,
+          monthlySpend: defaultSpend
+        }
+      ]);
     }
-
-    const updated = [...tools];
-    updated[index] = {
-      toolId,
-      planName: defaultPlan,
-      seats: defaultSeats,
-      monthlySpend: defaultSpend
-    };
-    setTools(updated);
   };
 
   // Helper to handle plan change
@@ -160,27 +174,6 @@ export default function AuditFormPage() {
       monthlySpend: Math.max(0, monthlySpend)
     };
     setTools(updated);
-  };
-
-  const addToolRow = () => {
-    if (!Array.isArray(tools)) return;
-    // Find first unused tool
-    const activeToolIds = new Set(tools.map(t => t.toolId));
-    const nextTool = availableToolsList.find(t => !activeToolIds.has(t.id)) || availableToolsList[0];
-
-    const defaultPlan = nextTool.plans[0]?.name || '';
-    const pricePerSeat = nextTool.plans[0]?.pricePerUserMonth ?? 0;
-    const defaultSpend = nextTool.plans[0]?.billingFrequency === 'usage' ? 50 : pricePerSeat * 1;
-
-    setTools([
-      ...tools,
-      {
-        toolId: nextTool.id,
-        planName: defaultPlan,
-        seats: 1,
-        monthlySpend: defaultSpend
-      }
-    ]);
   };
 
   const removeToolRow = (index: number) => {
@@ -304,21 +297,60 @@ export default function AuditFormPage() {
           </div>
         </div>
 
-        {/* Tools Repeatable List Card */}
+        {/* 2. Visual Stack Selector Grid */}
         <div className="glass p-6 sm:p-8 rounded-2xl border border-slate-800 space-y-6">
-          <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-            <h2 className="font-display font-bold text-lg text-white">
-              2. Tool Subscriptions
-            </h2>
-            <button
-              type="button"
-              onClick={addToolRow}
-              className="inline-flex items-center gap-1 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/20 py-1.5 px-3 rounded-lg text-xs font-bold transition cursor-pointer"
-            >
-              <Plus className="h-3 w-3" />
-              <span>Add Tool</span>
-            </button>
+          <h2 className="font-display font-bold text-lg text-white border-b border-slate-800 pb-3 flex items-center gap-2">
+            <span>2. Select Your AI Stack</span>
+          </h2>
+          
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+            {availableToolsList.map((t) => {
+              const isActive = Array.isArray(tools) && tools.some(tool => tool.toolId === t.id);
+              const logoData = TOOL_LOGOS[t.id] || { logo: 'AI', color: 'text-slate-400 border-slate-800', bgGlow: 'bg-slate-900/5' };
+              
+              return (
+                <button
+                  key={t.id}
+                  type="button"
+                  onClick={() => toggleToolSelection(t.id)}
+                  className={`relative p-4 rounded-xl border text-left transition duration-200 cursor-pointer flex flex-col items-center justify-center gap-2.5 h-28 overflow-hidden group select-none ${
+                    isActive 
+                      ? 'border-emerald-500 bg-emerald-500/[0.03] shadow-lg shadow-emerald-500/5' 
+                      : 'border-slate-800 bg-slate-950/40 hover:border-slate-700 hover:bg-slate-950/60'
+                  }`}
+                >
+                  {/* Selection dot */}
+                  <div className={`absolute top-2.5 right-2.5 w-4 h-4 rounded-full border flex items-center justify-center text-[9px] transition ${
+                    isActive 
+                      ? 'bg-emerald-500 border-emerald-400 text-slate-950 font-black' 
+                      : 'border-slate-800 text-transparent'
+                  }`}>
+                    ✓
+                  </div>
+
+                  {/* Logo Badge */}
+                  <div className={`w-9.5 h-9.5 rounded-xl border flex items-center justify-center font-display font-extrabold text-xs transition-all duration-300 ${logoData.color} ${logoData.bgGlow} ${
+                    isActive ? 'scale-105 shadow-md' : 'group-hover:scale-102'
+                  }`}>
+                    {logoData.logo}
+                  </div>
+
+                  <span className={`text-[11px] font-semibold transition ${
+                    isActive ? 'text-white' : 'text-slate-400'
+                  }`}>
+                    {t.name}
+                  </span>
+                </button>
+              );
+            })}
           </div>
+        </div>
+
+        {/* 3. Tool Configurations Card */}
+        <div className="glass p-6 sm:p-8 rounded-2xl border border-slate-800 space-y-6">
+          <h2 className="font-display font-bold text-lg text-white border-b border-slate-800 pb-3 flex items-center gap-2">
+            <span>3. Current Plan Configurations</span>
+          </h2>
 
           <div className="space-y-6">
             {Array.isArray(tools) && tools.map((tool, idx) => {
@@ -341,20 +373,19 @@ export default function AuditFormPage() {
                   </button>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-                    {/* Tool Dropdown */}
-                    <div>
-                      <label className="block text-[10px] font-semibold text-slate-500 uppercase tracking-wider mb-1.5">
+                    {/* Tool Name Badge (Read-Only) */}
+                    <div className="flex flex-col justify-center">
+                      <span className="block text-[10px] font-semibold text-slate-500 uppercase tracking-wider mb-1.5">
                         Tool Name
-                      </label>
-                      <select
-                        value={tool.toolId}
-                        onChange={(e) => handleToolChange(idx, e.target.value)}
-                        className="w-full bg-slate-950 border border-slate-800 text-slate-300 py-2.5 px-3 rounded-lg text-xs transition outline-none cursor-pointer hover:border-slate-700"
-                      >
-                        {availableToolsList.map((t) => (
-                          <option key={t.id} value={t.id}>{t.name}</option>
-                        ))}
-                      </select>
+                      </span>
+                      <div className="flex items-center gap-2 bg-slate-950 border border-slate-850 py-2.5 px-3 rounded-lg text-xs font-semibold text-white">
+                        <span className={`w-5 h-5 rounded-md border flex items-center justify-center font-display font-black text-[9px] shrink-0 ${
+                          TOOL_LOGOS[tool.toolId]?.color || 'text-slate-400'
+                        } ${TOOL_LOGOS[tool.toolId]?.bgGlow || 'bg-slate-900'}`}>
+                          {TOOL_LOGOS[tool.toolId]?.logo || 'AI'}
+                        </span>
+                        <span>{currentPricing?.name}</span>
+                      </div>
                     </div>
 
                     {/* Plan Dropdown */}
@@ -365,7 +396,7 @@ export default function AuditFormPage() {
                       <select
                         value={tool.planName}
                         onChange={(e) => handlePlanChange(idx, e.target.value)}
-                        className="w-full bg-slate-950 border border-slate-800 text-slate-300 py-2.5 px-3 rounded-lg text-xs transition outline-none cursor-pointer hover:border-slate-700"
+                        className="w-full bg-slate-950 border border-slate-805 text-slate-300 py-2.5 px-3 rounded-lg text-xs transition outline-none cursor-pointer hover:border-slate-700 font-semibold"
                       >
                         {currentPricing?.plans.map((p) => (
                           <option key={p.name} value={p.name}>{p.name}</option>
@@ -384,7 +415,7 @@ export default function AuditFormPage() {
                         max="500"
                         value={tool.seats}
                         onChange={(e) => handleSeatsChange(idx, parseInt(e.target.value, 10) || 1)}
-                        className="w-full bg-slate-950 border border-slate-800 text-slate-300 py-2 px-3 rounded-lg text-xs transition outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 font-medium"
+                        className="w-full bg-slate-950 border border-slate-850 text-slate-300 py-2 px-3 rounded-lg text-xs transition outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
                         disabled={isUsageType} // API tools don't have static user seats
                       />
                     </div>
@@ -405,7 +436,7 @@ export default function AuditFormPage() {
                         max="100000"
                         value={tool.monthlySpend}
                         onChange={(e) => handleSpendChange(idx, parseFloat(e.target.value) || 0)}
-                        className="w-full bg-slate-950 border border-slate-800 text-slate-300 py-2 px-3 rounded-lg text-xs transition outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 font-medium"
+                        className="w-full bg-slate-950 border border-slate-850 text-slate-300 py-2 px-3 rounded-lg text-xs transition outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 font-semibold"
                       />
                     </div>
                   </div>
@@ -416,7 +447,7 @@ export default function AuditFormPage() {
 
           {(!Array.isArray(tools) || tools.length === 0) && (
             <div className="text-center py-8 text-slate-500 text-xs">
-              No subscriptions added yet. Click &quot;Add Tool&quot; to start modeling your AI stack!
+              No tools selected yet. Select some AI tools in the grid above to configure your active stack!
             </div>
           )}
         </div>

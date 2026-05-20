@@ -15,3 +15,15 @@ Daily tracking of building a production-ready, highly-optimized AI SaaS spend au
   - Added defensive programming checks (`Array.isArray`) across all state mutator helpers (`addToolRow`, `removeToolRow`, `handleToolChange`, etc.) and JSX mapping statements to prevent unhandled React null-reference exceptions.
 - **Plan for tomorrow:** Initialize the Next.js 15 project codebase, configure custom dark Tailwind CSS tokens, and prepare the core pricing data files.
 
+## Day 2 — 2026-05-20
+- **Hours worked:** 4.0
+- **What I did:** Implemented advanced features to enhance the OptiAI Spend Audit UX:
+  1. **Strict AI Summary Alignment:** Upgraded prompt instructions in `lib/ai-summary.ts` to enforce a standardized layout consisting of a concise intro paragraph and exactly three bullet points (**Biggest Leak**, **Strategy**, **Action Plan**).
+  2. **Spend Copilot Integration:** Developed a server-side `/api/chat` Route Handler featuring OpenAI/Anthropic support and a highly-consultative, keyword-matching fallback system. Built a premium Spend Copilot Chatbox on `/results/[id]` featuring automatic scrolling, typing indicators, error alerts, and quick suggestion chips.
+  3. **Visual Stack Selector:** Replaced the legacy form dropdown with an 8-tool visual logo selection grid in `/audit` with beautiful active glowing borders and single-click toggle sync. Cleaned up form configuration details by rendering read-only, colored logo-name badges.
+  4. **Zero-Warning Code Quality:** Resolved all TypeScript, ESLint, and React cascading render warnings.
+- **What I learned:** Discovered that a custom, token-based markdown renderer in React can perfectly render simple formatting (bolding, lists, subheaders) client-side in less than 50 lines of code, bypassing the need for heavy external markdown libraries.
+- **Blockers / what I'm stuck on:** None. The app compiles flawlessly with zero linter errors, passes all test cases, and builds a production bundle cleanly.
+- **Plan for tomorrow:** Work on custom Resend email templates and automated background dispatching for lead generation follow-ups.
+
+

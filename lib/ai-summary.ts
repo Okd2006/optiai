@@ -15,7 +15,7 @@ export async function generateAiSummary(input: SummaryInput): Promise<string> {
     .join('\n');
 
   const prompt = `You are OptiAI, a financial audit bot that specializes in optimizing SaaS spend for AI software at startups.
-Generate a professional, high-impact, actionable audit summary (~100 words) based on these details:
+Generate a professional, high-impact, actionable audit summary based on these details:
 - Team Size: ${teamSize} employees
 - Primary Use Case: ${primaryUseCase}
 - Total Current Spend: $${results.totalCurrentSpend}/month
@@ -25,12 +25,18 @@ Generate a professional, high-impact, actionable audit summary (~100 words) base
 - Details of Stack and Recommendations:
 ${toolListStr}
 
-Guidelines:
-1. Be direct, authoritative, and helpful, maintaining an optimistic tone focusing on capital efficiency.
-2. Address the founder/CTO. Summarize their biggest overspending item (e.g. redundant tooling or plan mismatch) first.
-3. Quantify the exact annual savings.
-4. If net monthly savings > $500/month, include a brief sentence inviting them to book a custom Credex audit to double their savings.
-5. Keep it strictly under 110 words. Format with clean bullet points.`;
+Guidelines for Structure and Format:
+1. Output format must STRICTLY match this template (do not include any conversational preamble, introductory labels like "Here is your summary", or other text outside this exact structure):
+
+### AI Spend Audit Summary
+
+[An introductory paragraph summarizing the team size, current monthly spend, optimized monthly spend, and net monthly/annual savings returned to cash reserves.]
+
+- **Biggest Leak:** [Detail the primary source of overspending, quantifying the monthly savings from resolving this specific item.]
+- **Strategy:** [A strategic recommendation tailored to their primary use case, e.g., standardizing on Cursor for coding, consolidating duplicate conversational seats, etc.]
+- **Action Plan:** [A precise, immediate action plan to take, e.g. switching tiers to match seat counts, deleting duplicate tools, etc.]
+
+2. Keep the entire response under 130 words. Do not write anything else.`;
 
   // We will check environment variables for Anthropic and OpenAI.
   // Since we are running in local, if the user hasn't supplied them, we will use our smart, highly-customized local fallback template.
