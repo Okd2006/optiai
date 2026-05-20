@@ -4,13 +4,13 @@ OptiAI is a premium, production-quality SaaS web application that helps startups
 
 ---
 
-## 🚀 Live Links
+##  Live Links
 - **Production URL:** [https://optiai.vercel.app](https://optiai.vercel.app)
 - **Interactive Loom Walkthrough:** [https://loom.com/share/mock-optiai-walkthrough](https://loom.com/share/mock-optiai-walkthrough)
 
 ---
 
-## 🛠️ Quick Start
+##  Quick Start
 
 Get the local development server up and running on your machine.
 
@@ -48,7 +48,7 @@ npm test
 
 ---
 
-## 🧠 Engineering & Product Trade-offs
+##  Engineering & Product Trade-offs
 
 Here are five key architectural and business trade-offs made during the development of OptiAI:
 
