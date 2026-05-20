@@ -32,6 +32,7 @@ export default function AuditFormPage() {
     { toolId: 'chatgpt', planName: 'Plus', seats: 2, monthlySpend: 40 }
   ]);
 
+  const [isLoaded, setIsLoaded] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -45,9 +46,16 @@ export default function AuditFormPage() {
 
         if (savedTeamSize) setTeamSize(parseInt(savedTeamSize, 10));
         if (savedUseCase) setPrimaryUseCase(savedUseCase as 'coding' | 'writing' | 'research' | 'data' | 'mixed');
-        if (savedTools) setTools(JSON.parse(savedTools));
+        if (savedTools) {
+          const parsed = JSON.parse(savedTools);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            setTools(parsed);
+          }
+        }
       } catch (e) {
         console.warn('Failed to load form cache from localStorage:', e);
+      } finally {
+        setIsLoaded(true);
       }
     }, 0);
     return () => clearTimeout(timer);
@@ -55,6 +63,7 @@ export default function AuditFormPage() {
 
   // 2. Persist to localStorage on edits
   useEffect(() => {
+    if (!isLoaded) return;
     try {
       localStorage.setItem('optiai_teamSize', teamSize.toString());
       localStorage.setItem('optiai_primaryUseCase', primaryUseCase);
@@ -62,13 +71,14 @@ export default function AuditFormPage() {
     } catch (e) {
       console.warn('Failed to save form cache to localStorage:', e);
     }
-  }, [teamSize, primaryUseCase, tools]);
+  }, [teamSize, primaryUseCase, tools, isLoaded]);
 
   // Available tools
   const availableToolsList = Object.values(PRICING_DATA);
 
   // Helper to handle tool selection change
   const handleToolChange = (index: number, toolId: string) => {
+    if (!Array.isArray(tools) || !tools[index]) return;
     const pricing = PRICING_DATA[toolId];
     if (!pricing) return;
 
@@ -94,6 +104,7 @@ export default function AuditFormPage() {
 
   // Helper to handle plan change
   const handlePlanChange = (index: number, planName: string) => {
+    if (!Array.isArray(tools) || !tools[index]) return;
     const tool = tools[index];
     const pricing = PRICING_DATA[tool.toolId];
     if (!pricing) return;
@@ -117,6 +128,7 @@ export default function AuditFormPage() {
 
   // Helper to handle seats change
   const handleSeatsChange = (index: number, seatsVal: number) => {
+    if (!Array.isArray(tools) || !tools[index]) return;
     const seats = Math.max(1, seatsVal);
     const tool = tools[index];
     const pricing = PRICING_DATA[tool.toolId];
@@ -141,6 +153,7 @@ export default function AuditFormPage() {
 
   // Helper to handle custom spend change
   const handleSpendChange = (index: number, monthlySpend: number) => {
+    if (!Array.isArray(tools) || !tools[index]) return;
     const updated = [...tools];
     updated[index] = {
       ...tools[index],
@@ -150,6 +163,7 @@ export default function AuditFormPage() {
   };
 
   const addToolRow = () => {
+    if (!Array.isArray(tools)) return;
     // Find first unused tool
     const activeToolIds = new Set(tools.map(t => t.toolId));
     const nextTool = availableToolsList.find(t => !activeToolIds.has(t.id)) || availableToolsList[0];
@@ -170,6 +184,7 @@ export default function AuditFormPage() {
   };
 
   const removeToolRow = (index: number) => {
+    if (!Array.isArray(tools)) return;
     const updated = tools.filter((_, idx) => idx !== index);
     setTools(updated);
   };
@@ -179,7 +194,7 @@ export default function AuditFormPage() {
     setError(null);
     setLoading(true);
 
-    if (tools.length === 0) {
+    if (!Array.isArray(tools) || tools.length === 0) {
       setError('Please add at least one AI tool to analyze.');
       setLoading(false);
       return;
@@ -209,6 +224,15 @@ export default function AuditFormPage() {
       setLoading(false);
     }
   };
+
+  if (!isLoaded) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4 text-slate-400">
+        <Loader2 className="h-10 w-10 text-emerald-400 animate-spin" />
+        <span className="text-sm font-semibold tracking-wide">Loading Your Startup Stack...</span>
+      </div>
+    );
+  }
 
   return (
     <div className="relative overflow-hidden min-h-screen py-16 px-6 md:px-12 max-w-4xl mx-auto z-10">
@@ -297,7 +321,7 @@ export default function AuditFormPage() {
           </div>
 
           <div className="space-y-6">
-            {tools.map((tool, idx) => {
+            {Array.isArray(tools) && tools.map((tool, idx) => {
               const currentPricing = PRICING_DATA[tool.toolId];
               const isUsageType = currentPricing?.plans.find(p => p.name === tool.planName)?.billingFrequency === 'usage';
 
@@ -390,7 +414,7 @@ export default function AuditFormPage() {
             })}
           </div>
 
-          {tools.length === 0 && (
+          {(!Array.isArray(tools) || tools.length === 0) && (
             <div className="text-center py-8 text-slate-500 text-xs">
               No subscriptions added yet. Click &quot;Add Tool&quot; to start modeling your AI stack!
             </div>
