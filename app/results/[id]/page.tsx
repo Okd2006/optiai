@@ -600,128 +600,236 @@ export default function ResultsPage() {
         </div>
       </div>
 
-      {/* 5. Lead Capture Form Card */}
+      {/* 5. Split Lead Capture & Live Email Preview Section */}
       {!leadSubmitted ? (
-        <div className="glass p-6 sm:p-8 rounded-2xl border border-slate-800 space-y-6">
-          <div className="border-b border-slate-800 pb-3">
-            <span className="text-emerald-400 text-xs font-bold uppercase tracking-wider flex items-center gap-1">
-              <Lock className="h-3 w-3" />
-              Secure Data Delivery
-            </span>
-            <h2 className="font-display font-extrabold text-lg text-white mt-1">
-              Save Your Report & Claim Startup Credits
-            </h2>
-            <p className="text-xs text-slate-400 mt-1 leading-relaxed">
-              Register below to email a backup copy of your report dashboard and start the official broker channel for free startup API credits. We never share your company details.
-            </p>
+        <div className="lg:grid lg:grid-cols-5 lg:gap-8 items-start space-y-6 lg:space-y-0">
+          {/* Left Panel: Premium Lead Form (3/5 width) */}
+          <div className="glass p-6 sm:p-8 rounded-2xl border border-slate-800 space-y-6 lg:col-span-3">
+            <div className="border-b border-slate-800 pb-3">
+              <span className="text-emerald-400 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5">
+                <Lock className="h-3.5 w-3.5" />
+                <span>Secure Data Delivery</span>
+              </span>
+              <h2 className="font-display font-extrabold text-lg text-white mt-1">
+                Save Your Report & Claim Startup Credits
+              </h2>
+              <p className="text-xs text-slate-400 mt-1 leading-relaxed">
+                Register below to email a backup copy of your report dashboard and start the official broker channel for free startup API credits. We never share your company details.
+              </p>
+            </div>
+
+            <form onSubmit={handleLeadSubmit} className="space-y-4">
+              {leadError && (
+                <div className="flex items-center gap-2 p-3 bg-rose-500/10 border border-rose-500/20 text-rose-400 rounded-xl text-xs">
+                  <AlertCircle className="h-4 w-4 shrink-0" />
+                  <span>{leadError}</span>
+                </div>
+              )}
+
+              {/* Spam Honeypot Field - Hidden from normal users */}
+              <div className="hidden" aria-hidden="true">
+                <input
+                  type="text"
+                  name="honeypot"
+                  value={honeypot}
+                  onChange={(e) => setHoneypot(e.target.value)}
+                  placeholder="Leave this empty"
+                  tabIndex={-1}
+                  autoComplete="off"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {/* Email Address */}
+                <div>
+                  <label className="block text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5">
+                    Corporate Email Address <span className="text-rose-400 font-black">*</span>
+                  </label>
+                  <div className="relative">
+                    <Mail className="absolute left-3.5 top-3.5 h-4 w-4 text-slate-500" />
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="you@company.com"
+                      className="w-full bg-slate-950 border border-slate-800 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 text-slate-200 py-3 pl-10 pr-4 rounded-xl text-xs transition outline-none font-medium"
+                      required
+                    />
+                  </div>
+                </div>
+
+                {/* Company Name */}
+                <div>
+                  <label className="block text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5">
+                    Company Name <span className="text-slate-600 font-semibold">(Optional)</span>
+                  </label>
+                  <div className="relative">
+                    <Building className="absolute left-3.5 top-3.5 h-4 w-4 text-slate-500" />
+                    <input
+                      type="text"
+                      value={companyName}
+                      onChange={(e) => setCompanyName(e.target.value)}
+                      placeholder="Acme Inc."
+                      className="w-full bg-slate-950 border border-slate-800 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 text-slate-200 py-3 pl-10 pr-4 rounded-xl text-xs transition outline-none font-medium"
+                    />
+                  </div>
+                </div>
+
+                {/* Company Role */}
+                <div>
+                  <label className="block text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5">
+                    Your Role <span className="text-slate-600 font-semibold">(Optional)</span>
+                  </label>
+                  <div className="relative">
+                    <Briefcase className="absolute left-3.5 top-3.5 h-4 w-4 text-slate-500" />
+                    <input
+                      type="text"
+                      value={role}
+                      onChange={(e) => setRole(e.target.value)}
+                      placeholder="e.g. CTO, Eng Manager"
+                      className="w-full bg-slate-950 border border-slate-800 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 text-slate-200 py-3 pl-10 pr-4 rounded-xl text-xs transition outline-none font-medium"
+                    />
+                  </div>
+                </div>
+
+                {/* Company Seat Count */}
+                <div>
+                  <label className="block text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5">
+                    Total Team Size <span className="text-slate-600 font-semibold">(Optional)</span>
+                  </label>
+                  <div className="relative">
+                    <Users className="absolute left-3.5 top-3.5 h-4 w-4 text-slate-500" />
+                    <input
+                      type="number"
+                      value={leadTeamSize}
+                      onChange={(e) => setLeadTeamSize(e.target.value)}
+                      placeholder="e.g. 5"
+                      className="w-full bg-slate-950 border border-slate-800 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 text-slate-200 py-3 pl-10 pr-4 rounded-xl text-xs transition outline-none font-medium"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex justify-end pt-2">
+                <button
+                  type="submit"
+                  disabled={leadLoading}
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold px-6 py-3.5 rounded-xl shadow-lg transition duration-200 cursor-pointer disabled:opacity-50 text-xs"
+                >
+                  {leadLoading ? 'Securing Savings Database...' : 'Save Audit & Email Copy'}
+                  <ChevronRight className="h-4 w-4" />
+                </button>
+              </div>
+            </form>
           </div>
 
-          <form onSubmit={handleLeadSubmit} className="space-y-4">
-            {leadError && (
-              <div className="flex items-center gap-2 p-3 bg-rose-500/10 border border-rose-500/20 text-rose-400 rounded-xl text-xs">
-                <AlertCircle className="h-4 w-4 shrink-0" />
-                <span>{leadError}</span>
+          {/* Right Panel: High-Fidelity Mock Email Preview (2/5 width) */}
+          <div className="glass rounded-2xl border border-slate-800 overflow-hidden shadow-2xl flex flex-col h-[480px] lg:col-span-2">
+            {/* Email Header Mock Bar */}
+            <div className="bg-slate-950/80 border-b border-slate-900 px-4 py-3 flex items-center justify-between">
+              <div className="flex space-x-1.5">
+                <div className="w-2.5 h-2.5 rounded-full bg-rose-500/80" />
+                <div className="w-2.5 h-2.5 rounded-full bg-amber-500/80" />
+                <div className="w-2.5 h-2.5 rounded-full bg-emerald-500/80" />
               </div>
-            )}
-
-            {/* Spam Honeypot Field - Hidden from normal users */}
-            <div className="hidden" aria-hidden="true">
-              <input
-                type="text"
-                name="honeypot"
-                value={honeypot}
-                onChange={(e) => setHoneypot(e.target.value)}
-                placeholder="Leave this empty"
-                tabIndex={-1}
-                autoComplete="off"
-              />
+              <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+                Interactive Email Preview
+              </span>
+              <div className="w-8" />
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {/* Email Address */}
+            {/* Email Fields Mock */}
+            <div className="bg-slate-900/40 px-4 py-3 border-b border-slate-800/80 text-[10px] space-y-1.5 text-slate-400 font-medium">
               <div>
-                <label className="block text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5">
-                  Corporate Email Address <span className="text-rose-400 font-black">*</span>
-                </label>
-                <div className="relative">
-                  <Mail className="absolute left-3.5 top-3.5 h-4 w-4 text-slate-500" />
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="you@company.com"
-                    className="w-full bg-slate-950 border border-slate-800 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 text-slate-200 py-3 pl-10 pr-4 rounded-xl text-xs transition outline-none font-medium"
-                    required
-                  />
-                </div>
+                <span className="text-slate-500 w-12 inline-block">From:</span>
+                <span className="text-slate-300 font-semibold">OptiAI &lt;audits@optiai.co&gt;</span>
               </div>
-
-              {/* Company Name */}
               <div>
-                <label className="block text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5">
-                  Company Name <span className="text-slate-600 font-semibold">(Optional)</span>
-                </label>
-                <div className="relative">
-                  <Building className="absolute left-3.5 top-3.5 h-4 w-4 text-slate-500" />
-                  <input
-                    type="text"
-                    value={companyName}
-                    onChange={(e) => setCompanyName(e.target.value)}
-                    placeholder="Acme Inc."
-                    className="w-full bg-slate-950 border border-slate-800 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 text-slate-200 py-3 pl-10 pr-4 rounded-xl text-xs transition outline-none font-medium"
-                  />
-                </div>
+                <span className="text-slate-500 w-12 inline-block">To:</span>
+                <span className="text-emerald-400 font-semibold">{email || 'you@company.com'}</span>
               </div>
-
-              {/* Company Role */}
               <div>
-                <label className="block text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5">
-                  Your Role <span className="text-slate-600 font-semibold">(Optional)</span>
-                </label>
-                <div className="relative">
-                  <Briefcase className="absolute left-3.5 top-3.5 h-4 w-4 text-slate-500" />
-                  <input
-                    type="text"
-                    value={role}
-                    onChange={(e) => setRole(e.target.value)}
-                    placeholder="e.g. CTO, Eng Manager"
-                    className="w-full bg-slate-950 border border-slate-800 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 text-slate-200 py-3 pl-10 pr-4 rounded-xl text-xs transition outline-none font-medium"
-                  />
-                </div>
-              </div>
-
-              {/* Company Seat Count */}
-              <div>
-                <label className="block text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5">
-                  Total Team Size <span className="text-slate-600 font-semibold">(Optional)</span>
-                </label>
-                <div className="relative">
-                  <Users className="absolute left-3.5 top-3.5 h-4 w-4 text-slate-500" />
-                  <input
-                    type="number"
-                    value={leadTeamSize}
-                    onChange={(e) => setLeadTeamSize(e.target.value)}
-                    placeholder="e.g. 5"
-                    className="w-full bg-slate-950 border border-slate-800 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 text-slate-200 py-3 pl-10 pr-4 rounded-xl text-xs transition outline-none font-medium"
-                  />
-                </div>
+                <span className="text-slate-500 w-12 inline-block">Subject:</span>
+                <span className="text-slate-200 font-bold">
+                  Your AI Spend Optimization Report - {companyName || 'your Startup'}
+                </span>
               </div>
             </div>
 
-            <div className="flex justify-end pt-2">
-              <button
-                type="submit"
-                disabled={leadLoading}
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold px-6 py-3 rounded-xl shadow-lg transition duration-200 cursor-pointer disabled:opacity-50 text-xs"
-              >
-                {leadLoading ? 'Securing Savings Database...' : 'Save Audit & Email Copy'}
-                <ChevronRight className="h-4 w-4" />
-              </button>
+            {/* Simulated Email Content Body */}
+            <div className="flex-1 overflow-y-auto bg-slate-950 p-4 scrollbar-thin scrollbar-thumb-slate-850 scrollbar-track-transparent">
+              <div className="max-w-[500px] mx-auto bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-lg">
+                {/* Brand Header */}
+                <div className="bg-emerald-500 py-3 px-4 text-center">
+                  <h3 className="text-slate-950 font-display font-black text-xs uppercase tracking-wider margin-0">
+                    OptiAI Spend Audit
+                  </h3>
+                  <span className="text-[8px] text-emerald-950 font-bold block">
+                    Financial Optimization Report Completed
+                  </span>
+                </div>
+
+                {/* Email Body */}
+                <div className="p-4 space-y-4 text-left">
+                  <span className="block text-[11px] font-bold text-white">
+                    Hi {role || 'Founder'} at {companyName || 'your Startup'},
+                  </span>
+                  <p className="text-[10px] text-slate-400 leading-relaxed">
+                    We successfully compiled your startup&apos;s AI spend audit. By standardizing licensing tiers and eliminating overlaps, you can instantly recapture capital for your reserves.
+                  </p>
+
+                  {/* Visual Metric Cards */}
+                  <div className="grid grid-cols-2 gap-2.5">
+                    <div className="bg-emerald-500/[0.03] border border-emerald-500/20 rounded-lg p-2.5 text-center">
+                      <span className="block text-[8px] text-slate-400 uppercase font-semibold mb-0.5">
+                        Monthly Savings
+                      </span>
+                      <strong className="text-sm font-display font-extrabold text-emerald-400">
+                        {formatCurrency(savings)}
+                      </strong>
+                    </div>
+                    <div className="bg-emerald-500/[0.03] border border-emerald-500/20 rounded-lg p-2.5 text-center">
+                      <span className="block text-[8px] text-slate-400 uppercase font-semibold mb-0.5">
+                        Annual Savings
+                      </span>
+                      <strong className="text-sm font-display font-extrabold text-emerald-400">
+                        {formatCurrency(annualSavings)}
+                      </strong>
+                    </div>
+                  </div>
+
+                  {/* Spend details row */}
+                  <div className="border-t border-b border-slate-800 py-2 flex items-center justify-between text-[9px] text-slate-400">
+                    <span>Current Spend: <strong>{formatCurrency(results_data.totalCurrentSpend)}/mo</strong></span>
+                    <span>Optimized Spend: <strong className="text-emerald-400">{formatCurrency(results_data.totalRecommendedSpend)}/mo</strong></span>
+                  </div>
+
+                  {/* AI Summary report formatted */}
+                  <div className="border-l border-slate-800 pl-2 space-y-1.5 py-1 text-[9px] text-slate-300 leading-relaxed italic">
+                    <span className="block text-[9px] font-bold uppercase tracking-wider text-emerald-400 not-italic">
+                      Audit Highlights
+                    </span>
+                    {formatMessageContent(ai_summary)}
+                  </div>
+
+                  {/* Call to action button */}
+                  <div className="text-center pt-2">
+                    <div className="inline-block bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-extrabold text-[10px] px-4 py-2 rounded-lg shadow-md cursor-pointer select-none">
+                      View Complete Audit Dashboard
+                    </div>
+                  </div>
+                </div>
+
+                {/* Simulated Email Footer */}
+                <div className="bg-slate-950 border-t border-slate-800 p-3.5 text-center text-[8px] text-slate-500 leading-relaxed">
+                  Want to claim up to $10,000 in free startup API credits? Reply directly to this report to kickstart our broker services.
+                </div>
+              </div>
             </div>
-          </form>
+          </div>
         </div>
       ) : (
-        <div className="glass p-8 rounded-2xl border border-emerald-500/20 text-center space-y-4">
+        <div className="glass p-8 rounded-2xl border border-emerald-500/20 text-center space-y-4 animate-fade-in">
           <CheckCircle className="h-10 w-10 text-emerald-400 mx-auto" />
           <h3 className="font-display font-extrabold text-lg text-white">Savings Secured Successfully!</h3>
           <p className="text-xs text-slate-400 max-w-md mx-auto leading-relaxed">
