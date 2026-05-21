@@ -30,5 +30,5 @@ Daily tracking of building a production-ready, highly-optimized AI SaaS spend au
 - **What I learned:** 
   - Discovered that a custom, token-based markdown renderer in React can perfectly render simple formatting (bolding, lists, subheaders) client-side in less than 50 lines of code, bypassing the need for heavy external markdown libraries.
   - Discovered that mirroring exact dynamic server-rendered HTML payloads client-side in a mock visual email client significantly builds brand trust, boosting signup conversions through sheer visual interactive wow-factor.
-- **Blockers / what I'm stuck on:** None. The production bundle compiles successfully and all test cases pass.
+- **Blockers / what I'm stuck on:** I'm still ideating how the UI should look like and still figuring out the SMTP to work
 - **Plan for tomorrow:** Partner with the user to start running audits, gathering feedback, and polishing any minor aesthetic items in preparation for launch.
