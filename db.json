@@ -1,0 +1,175 @@
+{
+  "audits": {
+    "4997087b-d45d-4153-829e-9650634c7333": {
+      "id": "4997087b-d45d-4153-829e-9650634c7333",
+      "input_data": {
+        "teamSize": 5,
+        "primaryUseCase": "coding",
+        "tools": [
+          {
+            "toolId": "cursor",
+            "planName": "Pro",
+            "seats": 3,
+            "monthlySpend": 60
+          },
+          {
+            "toolId": "chatgpt",
+            "planName": "Plus",
+            "seats": 2,
+            "monthlySpend": 40
+          }
+        ]
+      },
+      "results_data": {
+        "totalCurrentSpend": 100,
+        "totalRecommendedSpend": 100,
+        "totalMonthlySavings": 0,
+        "totalAnnualSavings": 0,
+        "recommendations": [
+          {
+            "toolId": "cursor",
+            "toolName": "Cursor",
+            "currentPlan": "Pro",
+            "currentSpend": 60,
+            "currentSeats": 3,
+            "recommendedPlan": "Pro",
+            "recommendedSpend": 60,
+            "recommendedSeats": 3,
+            "monthlySavings": 0,
+            "annualSavings": 0,
+            "reason": "Your spend on this tool is already optimized."
+          },
+          {
+            "toolId": "chatgpt",
+            "toolName": "ChatGPT",
+            "currentPlan": "Plus",
+            "currentSpend": 40,
+            "currentSeats": 2,
+            "recommendedPlan": "Plus",
+            "recommendedSpend": 40,
+            "recommendedSeats": 2,
+            "monthlySavings": 0,
+            "annualSavings": 0,
+            "reason": "Your spend on this tool is already optimized."
+          }
+        ],
+        "showCredexCta": false,
+        "isWellOptimized": true
+      },
+      "ai_summary": "Your AI tool stack is currently outstandingly optimized! For a team of **5** specializing in **coding**, you have structured your seats and subscriptions efficiently. No immediate action is required. We recommend regular bi-monthly reviews of your spend as your team and tool offerings expand. Keep up the high standard of fiscal discipline!",
+      "total_monthly_savings": 0,
+      "total_annual_savings": 0,
+      "created_at": "2026-05-22T15:14:56.008Z"
+    },
+    "07cd92cc-be66-4608-b246-6aec93267113": {
+      "id": "07cd92cc-be66-4608-b246-6aec93267113",
+      "input_data": {
+        "teamSize": 5,
+        "primaryUseCase": "coding",
+        "tools": [
+          {
+            "toolId": "cursor",
+            "planName": "Pro",
+            "seats": 3,
+            "monthlySpend": 60
+          },
+          {
+            "toolId": "chatgpt",
+            "planName": "Plus",
+            "seats": 2,
+            "monthlySpend": 40
+          },
+          {
+            "toolId": "copilot",
+            "planName": "Individual",
+            "seats": 1,
+            "monthlySpend": 10
+          },
+          {
+            "toolId": "claude",
+            "planName": "Free",
+            "seats": 1,
+            "monthlySpend": 0
+          }
+        ]
+      },
+      "results_data": {
+        "totalCurrentSpend": 110,
+        "totalRecommendedSpend": 60,
+        "totalMonthlySavings": 50,
+        "totalAnnualSavings": 600,
+        "recommendations": [
+          {
+            "toolId": "cursor",
+            "toolName": "Cursor",
+            "currentPlan": "Pro",
+            "currentSpend": 60,
+            "currentSeats": 3,
+            "recommendedPlan": "Pro",
+            "recommendedSpend": 60,
+            "recommendedSeats": 3,
+            "monthlySavings": 0,
+            "annualSavings": 0,
+            "reason": "Your spend on this tool is already optimized."
+          },
+          {
+            "toolId": "chatgpt",
+            "toolName": "ChatGPT",
+            "currentPlan": "Plus",
+            "currentSpend": 40,
+            "currentSeats": 2,
+            "recommendedPlan": "Free",
+            "recommendedSpend": 0,
+            "recommendedSeats": 0,
+            "monthlySavings": 40,
+            "annualSavings": 480,
+            "reason": "Your team relies on Claude for specialized writing/coding tasks. Drop ChatGPT to eliminate redundant chat assistant subscriptions."
+          },
+          {
+            "toolId": "copilot",
+            "toolName": "GitHub Copilot",
+            "currentPlan": "Individual",
+            "currentSpend": 10,
+            "currentSeats": 1,
+            "recommendedPlan": "Hobby",
+            "recommendedSpend": 0,
+            "recommendedSeats": 0,
+            "monthlySavings": 10,
+            "annualSavings": 120,
+            "reason": "Your developers are already using Cursor which has built-in AI code-completions. GitHub Copilot is a redundant expenditure."
+          },
+          {
+            "toolId": "claude",
+            "toolName": "Claude",
+            "currentPlan": "Free",
+            "currentSpend": 0,
+            "currentSeats": 1,
+            "recommendedPlan": "Free",
+            "recommendedSpend": 0,
+            "recommendedSeats": 1,
+            "monthlySavings": 0,
+            "annualSavings": 0,
+            "reason": "Your spend on this tool is already optimized."
+          }
+        ],
+        "showCredexCta": false,
+        "isWellOptimized": true
+      },
+      "ai_summary": "### AI Spend Audit Summary\n\nYour team of **5** is currently spending **$110/month** on AI utilities. We have identified concrete optimizations that will reduce this to **$60/month**, instantly returning **$50/month** (**$600/year**) to your cash reserves.\n\n- **Biggest Leak:** The primary source of overspending is **ChatGPT**, where you could instantly save **$40/month** by adjusting your Plus plan.\n- **Strategy:** Standardizing your engineering workflows onto Cursor Pro and cancelling standalone Copilot licenses is the most impactful immediate optimization.\n- **Action Plan:** Switch plan tiers to match active team seat counts and delete duplicate tools immediately to capture these savings.",
+      "total_monthly_savings": 50,
+      "total_annual_savings": 600,
+      "created_at": "2026-05-22T15:46:41.351Z"
+    }
+  },
+  "leads": {
+    "1d1ad0d9-a0b9-43f6-bd29-c8e0b532a5d8": {
+      "audit_id": "4997087b-d45d-4153-829e-9650634c7333",
+      "email": "client-test@example.com",
+      "company_name": "Acme Startups",
+      "role": "CTO",
+      "team_size": 5,
+      "id": "1d1ad0d9-a0b9-43f6-bd29-c8e0b532a5d8",
+      "created_at": "2026-05-22T15:14:56.163Z"
+    }
+  }
+}

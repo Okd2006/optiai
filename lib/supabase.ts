@@ -21,12 +21,61 @@ export interface LeadRecord {
 }
 
 // In-memory global store to survive hot-reloads during local dev
+import fs from 'fs';
+import path from 'path';
+
+const DB_FILE = path.join(process.cwd(), 'db.json');
+
+interface DbData {
+  audits: Record<string, AuditRecord>;
+  leads: Record<string, LeadRecord>;
+}
+
+function loadDb(): DbData {
+  try {
+    if (fs.existsSync(DB_FILE)) {
+      const content = fs.readFileSync(DB_FILE, 'utf-8');
+      return JSON.parse(content) as DbData;
+    }
+  } catch (e) {
+    console.error('Error loading db.json:', e);
+  }
+  return { audits: {}, leads: {} };
+}
+
+function saveDb(data: DbData) {
+  try {
+    fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2), 'utf-8');
+  } catch (e) {
+    console.error('Error saving db.json:', e);
+  }
+}
+
 const globalRef = global as unknown as { mockAudits?: Map<string, AuditRecord>; mockLeads?: Map<string, LeadRecord> };
 if (!globalRef.mockAudits) {
   globalRef.mockAudits = new Map<string, AuditRecord>();
 }
 if (!globalRef.mockLeads) {
   globalRef.mockLeads = new Map<string, LeadRecord>();
+}
+
+// Pre-populate globalRef maps from db.json if they are empty
+try {
+  if (fs.existsSync(DB_FILE)) {
+    const db = loadDb();
+    if (db.audits && globalRef.mockAudits.size === 0) {
+      Object.entries(db.audits).forEach(([id, record]) => {
+        globalRef.mockAudits!.set(id, record);
+      });
+    }
+    if (db.leads && globalRef.mockLeads.size === 0) {
+      Object.entries(db.leads).forEach(([id, record]) => {
+        globalRef.mockLeads!.set(id, record);
+      });
+    }
+  }
+} catch (e) {
+  console.warn('Failed to pre-populate in-memory store from db.json:', e);
 }
 
 export const mockDb = {
@@ -67,12 +116,22 @@ export async function saveAudit(record: Omit<AuditRecord, 'created_at'>): Promis
       if (error) throw error;
       return data as AuditRecord;
     } catch (e) {
-      console.warn('Supabase saveAudit failed, falling back to local memory database:', e);
+      console.warn('Supabase saveAudit failed, falling back to local database:', e);
     }
   }
 
-  // Fallback to local memory DB
-  mockDb.audits.set(newRecord.id, newRecord);
+  // Fallback to local file-based DB
+  try {
+    const db = loadDb();
+    db.audits[newRecord.id] = newRecord;
+    saveDb(db);
+    // Sync with memory Map
+    mockDb.audits.set(newRecord.id, newRecord);
+  } catch (err) {
+    console.error('Failed to write to local db.json:', err);
+    mockDb.audits.set(newRecord.id, newRecord);
+  }
+  
   return newRecord;
 }
 
@@ -93,11 +152,21 @@ export async function getAudit(id: string): Promise<AuditRecord | null> {
       }
       return data as AuditRecord;
     } catch (e) {
-      console.warn('Supabase getAudit failed, checking local memory database:', e);
+      console.warn('Supabase getAudit failed, checking local database:', e);
     }
   }
 
-  // Fallback to local memory DB
+  // Fallback to local file-based DB
+  try {
+    const db = loadDb();
+    if (db.audits && db.audits[id]) {
+      return db.audits[id];
+    }
+  } catch (err) {
+    console.error('Failed to read from local db.json:', err);
+  }
+
+  // Backup in-memory read
   return mockDb.audits.get(id) || null;
 }
 
@@ -129,11 +198,21 @@ export async function saveLead(record: Omit<LeadRecord, 'id' | 'created_at'>): P
       if (error) throw error;
       return data as LeadRecord;
     } catch (e) {
-      console.warn('Supabase saveLead failed, falling back to local memory database:', e);
+      console.warn('Supabase saveLead failed, falling back to local database:', e);
     }
   }
 
-  // Fallback to local memory DB
-  mockDb.leads.set(newRecord.id, newRecord);
+  // Fallback to local file-based DB
+  try {
+    const db = loadDb();
+    db.leads[newRecord.id] = newRecord;
+    saveDb(db);
+    // Sync with memory Map
+    mockDb.leads.set(newRecord.id, newRecord);
+  } catch (err) {
+    console.error('Failed to write lead to local db.json:', err);
+    mockDb.leads.set(newRecord.id, newRecord);
+  }
+
   return newRecord;
 }

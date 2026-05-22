@@ -157,7 +157,10 @@ export async function POST(req: NextRequest) {
                 ${greetingText}
               </p>
               <p style="font-size: 13px; color: #94a3b8; line-height: 1.6; margin-bottom: 24px;">
-                We successfully compiled your startup's AI spend audit. By standardizing licensing tiers and eliminating overlaps, you can instantly recapture capital for your reserves.
+                ${results.isWellOptimized
+                  ? "We successfully compiled your startup's AI spend audit. Good news: your AI spend is already well optimized! We have included our recommendations breakdown below."
+                  : "We successfully compiled your startup's AI spend audit. By standardizing licensing tiers and eliminating overlaps, you can instantly recapture capital for your reserves."
+                }
               </p>
 
               <!-- Financial Metric Cards -->
@@ -213,6 +216,26 @@ export async function POST(req: NextRequest) {
                 </table>
               </div>
 
+              <!-- Dynamic Credex Callout Sponsor Banner in Email -->
+              ${results.showCredexCta
+                ? `
+                  <div style="background-color: rgba(16, 185, 129, 0.05); border: 1px dashed rgba(16, 185, 129, 0.3); border-radius: 12px; padding: 20px; text-align: center; margin: 28px 0;">
+                    <h3 style="color: #ffffff; font-family: sans-serif; font-size: 14px; font-weight: bold; margin: 0 0 8px 0; text-transform: uppercase;">
+                      You could save over ${annualSavings} annually!
+                    </h3>
+                    <p style="color: #cbd5e1; font-family: sans-serif; font-size: 12px; line-height: 1.5; margin: 0 0 16px 0;">
+                      Book a Credex consultation to unlock additional savings opportunities and secure up to $10,000 in free startup API credits.
+                    </p>
+                    <a href="https://credex.co/consultation" 
+                       target="_blank"
+                       style="background-color: #10b981; color: #090d16; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 12px; display: inline-block;">
+                      Book Credex Consultation
+                    </a>
+                  </div>
+                `
+                : ''
+              }
+
               <!-- Action Button CTA -->
               <div style="text-align: center; margin: 36px 0 20px 0;">
                 <a href="${auditDashboardLink}" 
@@ -249,7 +272,7 @@ export async function POST(req: NextRequest) {
             'Authorization': `Bearer ${resendApiKey}`
           },
           body: JSON.stringify({
-            from: 'OptiAI <audits@optiai.co>',
+            from: process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev',
             to: email,
             subject: emailSubject,
             html: emailHtmlBody

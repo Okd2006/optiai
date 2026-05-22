@@ -496,19 +496,19 @@ export default function ResultsPage() {
 
       {/* 3. Honest low savings notice OR high savings Credex CTA */}
       {results_data.isWellOptimized ? (
-        <div className="p-4 bg-emerald-500/5 border border-emerald-500/20 text-emerald-400 rounded-2xl text-xs sm:text-sm flex items-center gap-2.5">
+        <div className="p-4 bg-emerald-500/5 border border-emerald-500/20 text-emerald-400 rounded-2xl text-xs sm:text-sm flex items-center gap-2.5 animate-fade-in">
           <CheckCircle className="h-5 w-5 shrink-0 text-emerald-400" />
-          <span><strong>Fiscal Excellence:</strong> Your AI subscription spend is already well optimized! You have minimal tool overlap or excess seat allocations.</span>
+          <span><strong>Your AI spend is already well optimized.</strong> You have minimal tool overlap or excess seat allocations.</span>
         </div>
       ) : results_data.showCredexCta ? (
-        <div className="p-6 md:p-8 bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 rounded-3xl relative overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div className="p-6 md:p-8 bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 rounded-3xl relative overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-6 animate-fade-in">
           <div className="absolute top-[-30%] right-[-20%] w-[250px] h-[250px] rounded-full bg-emerald-400/5 blur-[60px] pointer-events-none" />
           <div className="space-y-2 max-w-xl">
             <h3 className="font-display font-extrabold text-lg sm:text-xl text-white">
-              Unlock Deeper Credex Partner Credits ($10k+)
+              You could save over {formatCurrency(annualSavings)} annually!
             </h3>
             <p className="text-xs text-slate-300 leading-relaxed">
-              Because your identified annual savings exceed $500/month, you qualify for official accelerator-tier sponsor packages. Book a complimentary consult to get up to $10,000 in free OpenAI/Anthropic API credits.
+              Book a Credex consultation to unlock additional savings opportunities.
             </p>
           </div>
           <a
@@ -608,13 +608,16 @@ export default function ResultsPage() {
             <div className="border-b border-slate-800 pb-3">
               <span className="text-emerald-400 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5">
                 <Lock className="h-3.5 w-3.5" />
-                <span>Secure Data Delivery</span>
+                <span>{results_data.isWellOptimized ? 'Stay Optimized' : 'Secure Data Delivery'}</span>
               </span>
               <h2 className="font-display font-extrabold text-lg text-white mt-1">
-                Save Your Report & Claim Startup Credits
+                {results_data.isWellOptimized ? 'Optimize Future Spend' : 'Save Your Report & Claim Startup Credits'}
               </h2>
               <p className="text-xs text-slate-400 mt-1 leading-relaxed">
-                Register below to email a backup copy of your report dashboard and start the official broker channel for free startup API credits. We never share your company details.
+                {results_data.isWellOptimized 
+                  ? 'Leave your email to be notified when future optimization opportunities become available.'
+                  : 'Register below to email a backup copy of your report dashboard and start the official broker channel for free startup API credits. We never share your company details.'
+                }
               </p>
             </div>
 
@@ -716,7 +719,12 @@ export default function ResultsPage() {
                   disabled={leadLoading}
                   className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold px-6 py-3.5 rounded-xl shadow-lg transition duration-200 cursor-pointer disabled:opacity-50 text-xs"
                 >
-                  {leadLoading ? 'Securing Savings Database...' : 'Save Audit & Email Copy'}
+                  {leadLoading 
+                    ? 'Securing Savings Database...' 
+                    : results_data.isWellOptimized 
+                      ? 'Send Audit Report' 
+                      : 'Email Me This Audit'
+                  }
                   <ChevronRight className="h-4 w-4" />
                 </button>
               </div>
@@ -775,7 +783,10 @@ export default function ResultsPage() {
                     Hi {role || 'Founder'} at {companyName || 'your Startup'},
                   </span>
                   <p className="text-[10px] text-slate-400 leading-relaxed">
-                    We successfully compiled your startup&apos;s AI spend audit. By standardizing licensing tiers and eliminating overlaps, you can instantly recapture capital for your reserves.
+                    {results_data.isWellOptimized
+                      ? 'We successfully compiled your startup\'s AI spend audit. Good news: your AI spend is already well optimized! We have included our tracking highlights below.'
+                      : 'We successfully compiled your startup\'s AI spend audit. By standardizing licensing tiers and eliminating overlaps, you can instantly recapture capital for your reserves.'
+                    }
                   </p>
 
                   {/* Visual Metric Cards */}
@@ -811,6 +822,21 @@ export default function ResultsPage() {
                     </span>
                     {formatMessageContent(ai_summary)}
                   </div>
+
+                  {/* Simulated Email Credex CTA Callout */}
+                  {results_data.showCredexCta && (
+                    <div className="bg-emerald-500/5 border border-dashed border-emerald-500/20 rounded-lg p-3 text-center my-3">
+                      <span className="block text-[9px] font-bold text-white uppercase tracking-wider mb-1">
+                        Sponsor Credits Opportunity Available
+                      </span>
+                      <p className="text-[8px] text-slate-300 leading-relaxed mb-2">
+                        Since your annual savings exceed $6,000, you are qualified for up to $10,000 in accelerator partner credits. Book a complimentary consult to claim.
+                      </p>
+                      <div className="inline-block bg-emerald-500 text-slate-950 font-bold text-[8px] px-2.5 py-1 rounded cursor-pointer">
+                        Book Credex Consultation
+                      </div>
+                    </div>
+                  )}
 
                   {/* Call to action button */}
                   <div className="text-center pt-2">

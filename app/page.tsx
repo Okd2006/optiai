@@ -8,18 +8,20 @@ import {
   ArrowRight,
   DollarSign
 } from 'lucide-react';
+import { TOOL_LOGOS } from '@/components/BrandLogos';
 
 export default function LandingPage() {
   const supportedTools = [
-    { name: 'Cursor', desc: 'AI Coding IDE', color: 'border-blue-500/20 text-blue-400' },
-    { name: 'Claude', desc: 'Anthropic Assistant', color: 'border-orange-500/20 text-orange-400' },
-    { name: 'ChatGPT', desc: 'OpenAI Plus & Teams', color: 'border-emerald-500/20 text-emerald-400' },
-    { name: 'GitHub Copilot', desc: 'IDE Completion', color: 'border-indigo-500/20 text-indigo-400' },
-    { name: 'Gemini', desc: 'Google Pro Assistant', color: 'border-cyan-500/20 text-cyan-400' },
-    { name: 'Windsurf', desc: 'AI Code Editor', color: 'border-teal-500/20 text-teal-400' },
-    { name: 'OpenAI API', desc: 'GPT-4o & Reasoning API', color: 'border-green-500/20 text-green-400' },
-    { name: 'Anthropic API', desc: 'Claude Sonnet API', color: 'border-rose-500/20 text-rose-400' }
+    { name: 'Cursor', desc: 'AI Coding IDE', logoKey: 'cursor', color: 'border-emerald-500/10 text-emerald-400 hover:border-emerald-500/40 hover:shadow-emerald-500/5' },
+    { name: 'Claude', desc: 'Anthropic Assistant', logoKey: 'claude', color: 'border-amber-500/10 text-amber-400 hover:border-amber-500/40 hover:shadow-amber-500/5' },
+    { name: 'ChatGPT', desc: 'OpenAI Plus & Teams', logoKey: 'chatgpt', color: 'border-teal-500/10 text-teal-400 hover:border-teal-500/40 hover:shadow-teal-500/5' },
+    { name: 'GitHub Copilot', desc: 'IDE Completion', logoKey: 'copilot', color: 'border-violet-500/10 text-violet-400 hover:border-violet-500/40 hover:shadow-violet-500/5' },
+    { name: 'Gemini', desc: 'Google Pro Assistant', logoKey: 'gemini', color: 'border-blue-500/10 text-blue-400 hover:border-blue-500/40 hover:shadow-blue-500/5' },
+    { name: 'Windsurf', desc: 'AI Code Editor', logoKey: 'windsurf', color: 'border-cyan-500/10 text-cyan-400 hover:border-cyan-500/40 hover:shadow-cyan-500/5' },
+    { name: 'OpenAI API', desc: 'GPT-4o & Reasoning API', logoKey: 'openai_api', color: 'border-teal-600/10 text-teal-500 hover:border-teal-600/40 hover:shadow-teal-600/5' },
+    { name: 'Anthropic API', desc: 'Claude Sonnet API', logoKey: 'anthropic_api', color: 'border-orange-500/10 text-orange-400 hover:border-orange-500/40 hover:shadow-orange-500/5' }
   ];
+
 
   const faqItems = [
     {
@@ -79,20 +81,27 @@ export default function LandingPage() {
       </section>
 
       {/* Supported Tools Logos Section */}
-      <section className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 py-12 border-y border-slate-800/60 bg-[#070b13]/60 backdrop-blur-sm">
-        <h2 className="text-center text-xs font-semibold text-slate-500 uppercase tracking-widest mb-8">
+      <section className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 py-16 border-y border-slate-800/60 bg-[#070b13]/60 backdrop-blur-sm">
+        <h2 className="text-center text-xs font-semibold text-slate-500 uppercase tracking-widest mb-10">
           Supported AI Stack Subscriptions
         </h2>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          {supportedTools.map((t, idx) => (
-            <div 
-              key={idx} 
-              className={`flex flex-col items-center justify-center p-4 border rounded-xl bg-slate-900/20 ${t.color} text-center hover:scale-102 transition duration-200`}
-            >
-              <span className="font-bold text-sm text-white mb-0.5">{t.name}</span>
-              <span className="text-[10px] text-slate-500">{t.desc}</span>
-            </div>
-          ))}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
+          {supportedTools.map((t, idx) => {
+            const logoConfig = TOOL_LOGOS[t.logoKey];
+            return (
+              <div 
+                key={idx} 
+                className={`flex flex-col items-center justify-center p-6 border rounded-2xl bg-slate-900/30 backdrop-blur-sm ${t.color} text-center hover:scale-103 hover:bg-slate-900/50 transition-all duration-250 group cursor-default shadow-lg`}
+              >
+                {/* Logo Icon with volumetric HSL glow */}
+                <div className={`p-4 rounded-xl mb-4 border transition duration-250 group-hover:scale-110 flex items-center justify-center ${logoConfig ? logoConfig.bgGlow + ' ' + logoConfig.color.split(' ')[1] : 'bg-slate-800/40 border-slate-700/40'}`}>
+                  {logoConfig ? logoConfig.logo({ className: "w-8 h-8" }) : null}
+                </div>
+                <span className="font-display font-bold text-base text-white mb-1 tracking-tight">{t.name}</span>
+                <span className="text-xs text-slate-400 font-medium">{t.desc}</span>
+              </div>
+            );
+          })}
         </div>
       </section>
 

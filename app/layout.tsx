@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { Inter, Outfit } from "next/font/google";
 import "./globals.css";
 import Link from "next/link";
-import { ShieldCheck, TrendingDown } from "lucide-react";
+import { ShieldCheck } from "lucide-react";
+import { OptiAiLogo } from "@/components/BrandLogos";
 
 const inter = Inter({
   variable: "--font-sans",
@@ -45,12 +46,10 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col font-sans text-slate-100 bg-[#070b13]">
         {/* Navigation Bar */}
         <header className="sticky top-0 z-50 glass border-b border-slate-800/60 py-4 px-6 md:px-12 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 group">
-            <div className="bg-emerald-500/10 p-2 rounded-lg border border-emerald-500/20 group-hover:border-emerald-500/40 transition">
-              <TrendingDown className="h-5 w-5 text-emerald-400 group-hover:scale-105 transition" />
-            </div>
-            <span className="font-display font-bold text-xl tracking-tight text-white">
-              Opti<span className="text-emerald-400">AI</span>
+          <Link href="/" className="flex items-center gap-3 group">
+            <OptiAiLogo className="h-7 w-14 group-hover:scale-105 transition" />
+            <span className="font-display font-black text-2xl md:text-3xl tracking-tight text-white flex items-center">
+              Opti<span className="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent drop-shadow-[0_0_8px_rgba(6,182,212,0.45)] ml-0.5">AI</span>
             </span>
           </Link>
           <nav className="hidden sm:flex items-center gap-8 text-sm font-medium text-slate-300">
@@ -75,10 +74,10 @@ export default function RootLayout({
         <footer className="border-t border-slate-800/80 bg-[#05080f] py-12 px-6 md:px-12 mt-auto">
           <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
             <div className="flex flex-col items-center md:items-start text-center md:text-left">
-              <Link href="/" className="flex items-center gap-2 mb-3">
-                <TrendingDown className="h-5 w-5 text-emerald-400" />
-                <span className="font-display font-bold text-lg text-white">
-                  Opti<span className="text-emerald-400">AI</span>
+              <Link href="/" className="flex items-center gap-2.5 mb-3">
+                <OptiAiLogo className="h-6.5 w-13" />
+                <span className="font-display font-extrabold text-xl md:text-2xl tracking-tight text-white flex items-center">
+                  Opti<span className="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent drop-shadow-[0_0_6px_rgba(6,182,212,0.3)] ml-0.5">AI</span>
                 </span>
               </Link>
               <p className="text-xs text-slate-400 max-w-sm">

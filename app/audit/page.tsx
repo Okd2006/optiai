@@ -3,8 +3,8 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { PRICING_DATA } from '@/lib/pricing-data';
+import { TOOL_LOGOS, OptiAiLogo } from '@/components/BrandLogos';
 import { 
-  TrendingDown, 
   Trash2, 
   ArrowRight, 
   Sparkles, 
@@ -19,17 +19,6 @@ interface ToolFormInput {
   seats: number;
   monthlySpend: number;
 }
-
-const TOOL_LOGOS: Record<string, { logo: string; color: string; bgGlow: string }> = {
-  cursor: { logo: 'Cu', color: 'text-emerald-400 border-emerald-500/30', bgGlow: 'bg-emerald-500/5' },
-  copilot: { logo: 'Gh', color: 'text-violet-400 border-violet-500/30', bgGlow: 'bg-violet-500/5' },
-  claude: { logo: 'Cl', color: 'text-amber-505 border-amber-500/30', bgGlow: 'bg-amber-500/5' },
-  chatgpt: { logo: 'Gpt', color: 'text-teal-400 border-teal-500/30', bgGlow: 'bg-teal-500/5' },
-  gemini: { logo: 'Ge', color: 'text-blue-400 border-blue-500/30', bgGlow: 'bg-blue-500/5' },
-  windsurf: { logo: 'Ws', color: 'text-cyan-400 border-cyan-500/30', bgGlow: 'bg-cyan-500/5' },
-  openai_api: { logo: 'Oai', color: 'text-teal-505 border-teal-600/30', bgGlow: 'bg-teal-600/5' },
-  anthropic_api: { logo: 'Ant', color: 'text-orange-400 border-orange-500/30', bgGlow: 'bg-orange-500/5' }
-};
 
 export default function AuditFormPage() {
   const router = useRouter();
@@ -235,7 +224,7 @@ export default function AuditFormPage() {
       {/* Header Description */}
       <div className="text-center mb-12">
         <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-500/10 border border-emerald-500/20 rounded-full text-xs font-semibold text-emerald-400 mb-4">
-          <TrendingDown className="h-3 w-3" />
+          <OptiAiLogo className="h-3.5 w-7" />
           <span>Audit Engine Version 1.1</span>
         </div>
         <h1 className="font-display font-extrabold text-3xl md:text-5xl text-white mb-3">
@@ -306,21 +295,21 @@ export default function AuditFormPage() {
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
             {availableToolsList.map((t) => {
               const isActive = Array.isArray(tools) && tools.some(tool => tool.toolId === t.id);
-              const logoData = TOOL_LOGOS[t.id] || { logo: 'AI', color: 'text-slate-400 border-slate-800', bgGlow: 'bg-slate-900/5' };
+              const logoData = TOOL_LOGOS[t.id] || { logo: () => <span className="text-[10px] font-bold">AI</span>, color: 'text-slate-400 border-slate-800', bgGlow: 'bg-slate-900/5' };
               
               return (
                 <button
                   key={t.id}
                   type="button"
                   onClick={() => toggleToolSelection(t.id)}
-                  className={`relative p-4 rounded-xl border text-left transition duration-200 cursor-pointer flex flex-col items-center justify-center gap-2.5 h-28 overflow-hidden group select-none ${
+                  className={`relative p-4 rounded-2xl border text-left transition duration-200 cursor-pointer flex flex-col items-center justify-center gap-3 h-32 overflow-hidden group select-none ${
                     isActive 
                       ? 'border-emerald-500 bg-emerald-500/[0.03] shadow-lg shadow-emerald-500/5' 
                       : 'border-slate-800 bg-slate-950/40 hover:border-slate-700 hover:bg-slate-950/60'
                   }`}
                 >
                   {/* Selection dot */}
-                  <div className={`absolute top-2.5 right-2.5 w-4 h-4 rounded-full border flex items-center justify-center text-[9px] transition ${
+                  <div className={`absolute top-2.5 right-2.5 w-4.5 h-4.5 rounded-full border flex items-center justify-center text-[10px] transition ${
                     isActive 
                       ? 'bg-emerald-500 border-emerald-400 text-slate-950 font-black' 
                       : 'border-slate-800 text-transparent'
@@ -329,14 +318,14 @@ export default function AuditFormPage() {
                   </div>
 
                   {/* Logo Badge */}
-                  <div className={`w-9.5 h-9.5 rounded-xl border flex items-center justify-center font-display font-extrabold text-xs transition-all duration-300 ${logoData.color} ${logoData.bgGlow} ${
+                  <div className={`w-14 h-14 rounded-2xl border flex items-center justify-center transition-all duration-300 ${logoData.color} ${logoData.bgGlow} ${
                     isActive ? 'scale-105 shadow-md' : 'group-hover:scale-102'
                   }`}>
-                    {logoData.logo}
+                    {logoData.logo({ className: 'w-8 h-8' })}
                   </div>
 
-                  <span className={`text-[11px] font-semibold transition ${
-                    isActive ? 'text-white' : 'text-slate-400'
+                  <span className={`text-xs font-semibold transition tracking-wide ${
+                    isActive ? 'text-white font-bold' : 'text-slate-350'
                   }`}>
                     {t.name}
                   </span>
@@ -378,13 +367,13 @@ export default function AuditFormPage() {
                       <span className="block text-[10px] font-semibold text-slate-500 uppercase tracking-wider mb-1.5">
                         Tool Name
                       </span>
-                      <div className="flex items-center gap-2 bg-slate-950 border border-slate-850 py-2.5 px-3 rounded-lg text-xs font-semibold text-white">
-                        <span className={`w-5 h-5 rounded-md border flex items-center justify-center font-display font-black text-[9px] shrink-0 ${
+                      <div className="flex items-center gap-3 bg-slate-950 border border-slate-850 py-2.5 px-3.5 rounded-xl text-xs font-bold text-white">
+                        <span className={`w-8 h-8 rounded-lg border flex items-center justify-center shrink-0 ${
                           TOOL_LOGOS[tool.toolId]?.color || 'text-slate-400'
                         } ${TOOL_LOGOS[tool.toolId]?.bgGlow || 'bg-slate-900'}`}>
-                          {TOOL_LOGOS[tool.toolId]?.logo || 'AI'}
+                          {TOOL_LOGOS[tool.toolId] ? TOOL_LOGOS[tool.toolId].logo({ className: 'w-5 h-5' }) : 'AI'}
                         </span>
-                        <span>{currentPricing?.name}</span>
+                        <span className="text-sm font-semibold tracking-wide">{currentPricing?.name}</span>
                       </div>
                     </div>
 
