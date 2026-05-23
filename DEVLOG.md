@@ -54,7 +54,7 @@ Daily tracking of building a production-ready, highly-optimized AI SaaS spend au
 - **What I learned:** 
   - Learned that dual-layer path overlays in SVG are a powerful, high-performance way to create reflective, metallic outlines and borders on complex curves (like infinity beziers) that are otherwise incredibly difficult to represent with standard stroke techniques.
   - Learned that scaling and styling brand typography in tandem with a custom logo creates a cohesive visual rhythm, establishing premium enterprise authority from the very first pixel.
-- **Blockers / what I'm stuck on:** None! Successfully resolved the custom domain & DNS onboarding bottleneck by establishing a comprehensive integration plan detailing domain registration, DKIM, SPF, and DMARC record mappings.
+- **Blockers / what I'm stuck on:** Still fuguring out on how to work on with the resend mail for lead generation.
 - **Plan for tomorrow (Day 4):**
   1. Purchase the primary brand domain (e.g., `optiai.co` or similar) via Vercel Domains/Cloudflare.
   2. Configure Resend DNS authentication records (3x DKIM CNAMEs, SPF TXT, DMARC TXT) in the registrar console.
