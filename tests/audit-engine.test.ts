@@ -148,4 +148,52 @@ describe('OptiAI Cost Audit Calculations Engine', () => {
     expect(results.isWellOptimized).toBe(true);
     expect(results.showCredexCta).toBe(false);
   });
+
+  // Test Case 6: Extended SaaS Business Intelligence & Health Score
+  it('should calculate accurate health score, redundant stack, and archetypes', () => {
+    const input: AuditInput = {
+      teamSize: 3,
+      primaryUseCase: 'coding',
+      tools: [
+        {
+          toolId: 'cursor',
+          planName: 'Business',
+          seats: 2,
+          monthlySpend: 80
+        },
+        {
+          toolId: 'copilot',
+          planName: 'Individual',
+          seats: 3,
+          monthlySpend: 30
+        },
+        {
+          toolId: 'chatgpt',
+          planName: 'Team',
+          seats: 1,
+          monthlySpend: 60
+        }
+      ]
+    };
+
+    const results = runAudit(input);
+    
+    // 1. Health Score check
+    expect(results.healthScore).toBeDefined();
+    expect(results.healthScore?.overallScore).toBeLessThan(80); // Should trigger deductions
+
+    // 2. Redundant stack check
+    expect(results.redundancies).toBeDefined();
+    const redundancyPair = results.redundancies?.find(r => r.overlappingTools.includes('Cursor') && r.overlappingTools.includes('GitHub Copilot'));
+    expect(redundancyPair).toBeDefined();
+
+    // 3. Category distribution check
+    expect(results.categoriesSpend).toBeDefined();
+    const codingCategory = results.categoriesSpend?.find(c => c.category === 'Coding');
+    expect(codingCategory).toBeDefined();
+
+    // 4. Archetype checks
+    expect(results.persona).toBeDefined();
+    expect(results.persona?.archetype).toBeDefined();
+  });
 });

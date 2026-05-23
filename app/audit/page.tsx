@@ -363,17 +363,17 @@ export default function AuditFormPage() {
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
                     {/* Tool Name Badge (Read-Only) */}
-                    <div className="flex flex-col justify-center">
-                      <span className="block text-[10px] font-semibold text-slate-500 uppercase tracking-wider mb-1.5">
+                    <div>
+                      <label className="block text-[10px] font-semibold text-slate-500 uppercase tracking-wider mb-1.5">
                         Tool Name
-                      </span>
-                      <div className="flex items-center gap-3 bg-slate-950 border border-slate-850 py-2.5 px-3.5 rounded-xl text-xs font-bold text-white">
-                        <span className={`w-8 h-8 rounded-lg border flex items-center justify-center shrink-0 ${
+                      </label>
+                      <div className="flex items-center gap-3 bg-slate-950 border border-slate-800 px-3.5 rounded-xl text-xs font-semibold text-slate-200 h-[50px] w-full">
+                        <span className={`w-7 h-7 rounded-lg border flex items-center justify-center shrink-0 ${
                           TOOL_LOGOS[tool.toolId]?.color || 'text-slate-400'
                         } ${TOOL_LOGOS[tool.toolId]?.bgGlow || 'bg-slate-900'}`}>
-                          {TOOL_LOGOS[tool.toolId] ? TOOL_LOGOS[tool.toolId].logo({ className: 'w-5 h-5' }) : 'AI'}
+                          {TOOL_LOGOS[tool.toolId] ? TOOL_LOGOS[tool.toolId].logo({ className: 'w-4 h-4' }) : 'AI'}
                         </span>
-                        <span className="text-sm font-semibold tracking-wide">{currentPricing?.name}</span>
+                        <span className="text-sm font-semibold tracking-wide truncate">{currentPricing?.name}</span>
                       </div>
                     </div>
 
@@ -385,7 +385,7 @@ export default function AuditFormPage() {
                       <select
                         value={tool.planName}
                         onChange={(e) => handlePlanChange(idx, e.target.value)}
-                        className="w-full bg-slate-950 border border-slate-805 text-slate-300 py-2.5 px-3 rounded-lg text-xs transition outline-none cursor-pointer hover:border-slate-700 font-semibold"
+                        className="w-full bg-slate-950 border border-slate-800 text-slate-200 px-3.5 rounded-xl text-xs transition outline-none cursor-pointer hover:border-slate-700 font-semibold h-[50px] py-0"
                       >
                         {currentPricing?.plans.map((p) => (
                           <option key={p.name} value={p.name}>{p.name}</option>
@@ -404,7 +404,7 @@ export default function AuditFormPage() {
                         max="500"
                         value={tool.seats}
                         onChange={(e) => handleSeatsChange(idx, parseInt(e.target.value, 10) || 1)}
-                        className="w-full bg-slate-950 border border-slate-850 text-slate-300 py-2 px-3 rounded-lg text-xs transition outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="w-full bg-slate-950 border border-slate-800 text-slate-200 px-3.5 rounded-xl text-xs transition outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 font-semibold disabled:opacity-50 disabled:cursor-not-allowed h-[50px] py-0"
                         disabled={isUsageType} // API tools don't have static user seats
                       />
                     </div>
@@ -425,7 +425,7 @@ export default function AuditFormPage() {
                         max="100000"
                         value={tool.monthlySpend}
                         onChange={(e) => handleSpendChange(idx, parseFloat(e.target.value) || 0)}
-                        className="w-full bg-slate-950 border border-slate-850 text-slate-300 py-2 px-3 rounded-lg text-xs transition outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 font-semibold"
+                        className="w-full bg-slate-950 border border-slate-800 text-slate-200 px-3.5 rounded-xl text-xs transition outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 font-semibold h-[50px] py-0"
                       />
                     </div>
                   </div>
