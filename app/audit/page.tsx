@@ -16,15 +16,15 @@ import {
 interface ToolFormInput {
   toolId: string;
   planName: string;
-  seats: number;
-  monthlySpend: number;
+  seats: number | '';
+  monthlySpend: number | '';
 }
 
 export default function AuditFormPage() {
   const router = useRouter();
   
   // Form states
-  const [teamSize, setTeamSize] = useState<number>(5);
+  const [teamSize, setTeamSize] = useState<number | ''>(5);
   const [primaryUseCase, setPrimaryUseCase] = useState<'coding' | 'writing' | 'research' | 'data' | 'mixed'>('coding');
   const [tools, setTools] = useState<ToolFormInput[]>([
     { toolId: 'cursor', planName: 'Pro', seats: 3, monthlySpend: 60 },
@@ -64,7 +64,7 @@ export default function AuditFormPage() {
   useEffect(() => {
     if (!isLoaded) return;
     try {
-      localStorage.setItem('optiai_teamSize', teamSize.toString());
+      localStorage.setItem('optiai_teamSize', teamSize ? teamSize.toString() : '1');
       localStorage.setItem('optiai_primaryUseCase', primaryUseCase);
       localStorage.setItem('optiai_tools', JSON.stringify(tools));
     } catch (e) {
@@ -115,9 +115,10 @@ export default function AuditFormPage() {
     const plan = pricing.plans.find(p => p.name === planName);
     const pricePerSeat = plan?.pricePerUserMonth ?? 0;
     
-    let spend = pricePerSeat * tool.seats;
+    const calculationSeats = tool.seats === '' ? 1 : tool.seats;
+    let spend = pricePerSeat * calculationSeats;
     if (plan?.billingFrequency === 'usage') {
-      spend = tool.monthlySpend || 50; // maintain custom spend
+      spend = tool.monthlySpend === '' ? 50 : tool.monthlySpend; // maintain custom spend or default to 50
     }
 
     const updated = [...tools];
@@ -130,9 +131,8 @@ export default function AuditFormPage() {
   };
 
   // Helper to handle seats change
-  const handleSeatsChange = (index: number, seatsVal: number) => {
+  const handleSeatsChange = (index: number, seatsVal: number | '') => {
     if (!Array.isArray(tools) || !tools[index]) return;
-    const seats = Math.max(1, seatsVal);
     const tool = tools[index];
     const pricing = PRICING_DATA[tool.toolId];
     if (!pricing) return;
@@ -140,27 +140,29 @@ export default function AuditFormPage() {
     const plan = pricing.plans.find(p => p.name === tool.planName);
     const pricePerSeat = plan?.pricePerUserMonth ?? 0;
 
-    let spend = pricePerSeat * seats;
+    // Use 1 as a temporary fallback for calculation while typing
+    const calculationSeats = seatsVal === '' ? 1 : seatsVal;
+    let spend = pricePerSeat * calculationSeats;
     if (plan?.billingFrequency === 'usage') {
-      spend = tool.monthlySpend; // usage-based stays custom
+      spend = tool.monthlySpend === '' ? 0 : tool.monthlySpend; // usage-based stays custom
     }
 
     const updated = [...tools];
     updated[index] = {
       ...tool,
-      seats,
+      seats: seatsVal,
       monthlySpend: spend
     };
     setTools(updated);
   };
 
   // Helper to handle custom spend change
-  const handleSpendChange = (index: number, monthlySpend: number) => {
+  const handleSpendChange = (index: number, monthlySpend: number | '') => {
     if (!Array.isArray(tools) || !tools[index]) return;
     const updated = [...tools];
     updated[index] = {
       ...tools[index],
-      monthlySpend: Math.max(0, monthlySpend)
+      monthlySpend: monthlySpend === '' ? '' : Math.max(0, monthlySpend)
     };
     setTools(updated);
   };
@@ -183,15 +185,22 @@ export default function AuditFormPage() {
     }
 
     try {
+      // Map empty seats or spend to defaults for the request
+      const sanitizedTools = tools.map(t => ({
+        ...t,
+        seats: t.seats === '' ? 1 : t.seats,
+        monthlySpend: t.monthlySpend === '' ? 0 : t.monthlySpend
+      }));
+
       const response = await fetch('/api/audit', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          teamSize,
+          teamSize: teamSize || 1,
           primaryUseCase,
-          tools
+          tools: sanitizedTools
         })
       });
 
@@ -260,7 +269,7 @@ export default function AuditFormPage() {
                 min="1"
                 max="1000"
                 value={teamSize}
-                onChange={(e) => setTeamSize(parseInt(e.target.value, 10) || 1)}
+                onChange={(e) => setTeamSize(e.target.value === '' ? '' : parseInt(e.target.value, 10))}
                 className="w-full bg-slate-950 border border-slate-800 hover:border-slate-700 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 text-slate-200 py-3 px-4 rounded-xl text-sm transition outline-none font-medium"
                 required
               />
@@ -403,7 +412,7 @@ export default function AuditFormPage() {
                         min="1"
                         max="500"
                         value={tool.seats}
-                        onChange={(e) => handleSeatsChange(idx, parseInt(e.target.value, 10) || 1)}
+                        onChange={(e) => handleSeatsChange(idx, e.target.value === '' ? '' : parseInt(e.target.value, 10))}
                         className="w-full bg-slate-950 border border-slate-800 text-slate-200 px-3.5 rounded-xl text-xs transition outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 font-semibold disabled:opacity-50 disabled:cursor-not-allowed h-[50px] py-0"
                         disabled={isUsageType} // API tools don't have static user seats
                       />
@@ -424,7 +433,7 @@ export default function AuditFormPage() {
                         min="0"
                         max="100000"
                         value={tool.monthlySpend}
-                        onChange={(e) => handleSpendChange(idx, parseFloat(e.target.value) || 0)}
+                        onChange={(e) => handleSpendChange(idx, e.target.value === '' ? '' : parseFloat(e.target.value))}
                         className="w-full bg-slate-950 border border-slate-800 text-slate-200 px-3.5 rounded-xl text-xs transition outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 font-semibold h-[50px] py-0"
                       />
                     </div>

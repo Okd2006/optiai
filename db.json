@@ -386,6 +386,467 @@
       "total_monthly_savings": 50,
       "total_annual_savings": 600,
       "created_at": "2026-05-23T10:09:48.972Z"
+    },
+    "d5138248-3b0f-488c-866d-943a75428b1d": {
+      "id": "d5138248-3b0f-488c-866d-943a75428b1d",
+      "input_data": {
+        "teamSize": 54,
+        "primaryUseCase": "coding",
+        "tools": [
+          {
+            "toolId": "cursor",
+            "planName": "Pro",
+            "seats": 3,
+            "monthlySpend": 60
+          },
+          {
+            "toolId": "chatgpt",
+            "planName": "Plus",
+            "seats": 2,
+            "monthlySpend": 40
+          },
+          {
+            "toolId": "copilot",
+            "planName": "Individual",
+            "seats": 1,
+            "monthlySpend": 10
+          },
+          {
+            "toolId": "claude",
+            "planName": "Free",
+            "seats": 1,
+            "monthlySpend": 0
+          }
+        ]
+      },
+      "results_data": {
+        "totalCurrentSpend": 110,
+        "totalRecommendedSpend": 60,
+        "totalMonthlySavings": 50,
+        "totalAnnualSavings": 600,
+        "recommendations": [
+          {
+            "toolId": "cursor",
+            "toolName": "Cursor",
+            "currentPlan": "Pro",
+            "currentSpend": 60,
+            "currentSeats": 3,
+            "recommendedPlan": "Pro",
+            "recommendedSpend": 60,
+            "recommendedSeats": 3,
+            "monthlySavings": 0,
+            "annualSavings": 0,
+            "reason": "Your spend on this tool is already optimized.",
+            "priority": "Low",
+            "confidence": "High",
+            "confidenceReason": "Perfect match with team size capabilities and tier definitions.",
+            "effort": "Low"
+          },
+          {
+            "toolId": "chatgpt",
+            "toolName": "ChatGPT",
+            "currentPlan": "Plus",
+            "currentSpend": 40,
+            "currentSeats": 2,
+            "recommendedPlan": "Free",
+            "recommendedSpend": 0,
+            "recommendedSeats": 0,
+            "monthlySavings": 40,
+            "annualSavings": 480,
+            "reason": "Your team relies on Claude for specialized writing/coding tasks. Drop ChatGPT to eliminate redundant chat assistant subscriptions.",
+            "priority": "High",
+            "confidence": "Medium",
+            "confidenceReason": "Consolidation of chat clients depends on team-wide preferences for GPT vs Claude models.",
+            "effort": "Medium"
+          },
+          {
+            "toolId": "copilot",
+            "toolName": "GitHub Copilot",
+            "currentPlan": "Individual",
+            "currentSpend": 10,
+            "currentSeats": 1,
+            "recommendedPlan": "Hobby",
+            "recommendedSpend": 0,
+            "recommendedSeats": 0,
+            "monthlySavings": 10,
+            "annualSavings": 120,
+            "reason": "Your developers are already using Cursor which has built-in AI code-completions. GitHub Copilot is a redundant expenditure.",
+            "priority": "Critical",
+            "confidence": "High",
+            "confidenceReason": "IDE-level autocomplete features completely overlap with modern AI IDEs.",
+            "effort": "Low"
+          },
+          {
+            "toolId": "claude",
+            "toolName": "Claude",
+            "currentPlan": "Free",
+            "currentSpend": 0,
+            "currentSeats": 1,
+            "recommendedPlan": "Free",
+            "recommendedSpend": 0,
+            "recommendedSeats": 1,
+            "monthlySavings": 0,
+            "annualSavings": 0,
+            "reason": "Your spend on this tool is already optimized.",
+            "priority": "Low",
+            "confidence": "High",
+            "confidenceReason": "Perfect match with team size capabilities and tier definitions.",
+            "effort": "Low"
+          }
+        ],
+        "showCredexCta": false,
+        "isWellOptimized": true,
+        "healthScore": {
+          "overallScore": 80,
+          "overallLabel": "Moderate Overspend",
+          "categories": {
+            "planEfficiency": {
+              "score": 100,
+              "label": "Optimized",
+              "description": "Tuning seat sizes and plan tiers to eliminate vendor traps."
+            },
+            "toolRedundancy": {
+              "score": 30,
+              "label": "Significant Waste",
+              "description": "Removing tools with overlapping features like separate chat and IDE plugins."
+            },
+            "collaborationEfficiency": {
+              "score": 100,
+              "label": "Optimized",
+              "description": "Sizing collaboration features properly to match real active team sizes."
+            },
+            "apiCostEfficiency": {
+              "score": 100,
+              "label": "Optimized",
+              "description": "Implementing API integrations with context caching and load-routing."
+            },
+            "stackComplexity": {
+              "score": 70,
+              "label": "Moderate Overspend",
+              "description": "Managing overall tool count to avoid billing creep and administrative overhead."
+            }
+          }
+        },
+        "redundancies": [
+          {
+            "overlappingTools": [
+              "Cursor",
+              "GitHub Copilot"
+            ],
+            "message": "You are paying for GitHub Copilot licenses while developers are standardizing on Cursor IDE. Cursor has native AI autocomplete capabilities, making Copilot unnecessary.",
+            "consolidationStrategy": "Cancel all GitHub Copilot licenses and standardize the engineering team on Cursor Pro or Business.",
+            "potentialSavings": 10
+          },
+          {
+            "overlappingTools": [
+              "ChatGPT",
+              "Claude"
+            ],
+            "message": "You have active subscriptions for both ChatGPT Plus/Team and Claude Pro/Team. These generic prompt interfaces duplicate specialized LLM tasks.",
+            "consolidationStrategy": "Standardize writing and logic tasks onto Claude Pro/Team and downgrade ChatGPT to the Free tier, or vice versa.",
+            "potentialSavings": 0
+          }
+        ],
+        "categoriesSpend": [
+          {
+            "category": "Coding",
+            "currentSpend": 70,
+            "recommendedSpend": 60,
+            "savings": 10,
+            "percent": 64
+          },
+          {
+            "category": "Writing",
+            "currentSpend": 40,
+            "recommendedSpend": 0,
+            "savings": 40,
+            "percent": 36
+          }
+        ],
+        "benchmarks": {
+          "spendPerDeveloper": 2,
+          "industryAverage": 75,
+          "percentile": 12,
+          "comparisonPercentage": 97,
+          "comparisonLabel": "lower",
+          "industryLabel": "AI-First Tech Startups"
+        },
+        "persona": {
+          "archetype": "Engineering-Heavy Startup",
+          "tagline": "Developer-centric environment with comprehensive IDE AI integration.",
+          "maturityScore": 80,
+          "observation": "Your AI footprint is concentrated heavily within the development team, leveraging modern IDEs like Cursor or Windsurf. Other business components (marketing, sales) have minimal AI support.",
+          "strategy": "Standardize code-base workspace compliance. Since engineers are already equipped, avoid licensing secondary autocomplete tools like GitHub Copilot or Tabnine."
+        },
+        "roadmap": [
+          {
+            "id": "ms-1",
+            "stage": "Immediate",
+            "title": "Consolidate Redundant Autocomplete Licenses",
+            "description": "Cancel duplicate GitHub Copilot seats for developers already standardizing on Cursor or Windsurf. De-provision licenses in your GitHub Org panel.",
+            "savings": 10,
+            "priority": "Critical",
+            "complexity": "Low",
+            "roi": "Instant ROI"
+          },
+          {
+            "id": "ms-2",
+            "stage": "90-Day",
+            "title": "Standardize Corporate Prompt Suites",
+            "description": "Establish central provisioning policies. Standardize business workflows on a single chat partner (Claude Pro) to leverage central Projects billing.",
+            "savings": 40,
+            "priority": "Medium",
+            "complexity": "Medium",
+            "roi": "5x ROI"
+          }
+        ],
+        "founderInsights": [
+          {
+            "title": "Optimal Resource Leverage and AI Readiness",
+            "observation": "Your SaaS footprint is extremely clean. Your spend ratio per developer aligns perfectly with early-stage bootstrapped benchmarks.",
+            "impact": "Minimal operational overhead and zero shadow-IT billing leaks, ensuring highly predictable engineering runway margins.",
+            "actionableStep": "Formulate automated monthly reviews to audit subscription additions as you scale the engineering team beyond 10 developers."
+          }
+        ]
+      },
+      "ai_summary": "### AI Spend Audit Summary\n\nYour team of **54** is currently spending **$110/month** on AI utilities. We have identified concrete optimizations that will reduce this to **$60/month**, instantly returning **$50/month** (**$600/year**) to your cash reserves.\n\n- **Biggest Leak:** The primary source of overspending is **ChatGPT**, where you could instantly save **$40/month** by adjusting your Plus plan.\n- **Strategy:** Standardizing your engineering workflows onto Cursor Pro and cancelling standalone Copilot licenses is the most impactful immediate optimization.\n- **Action Plan:** Switch plan tiers to match active team seat counts and delete duplicate tools immediately to capture these savings.",
+      "total_monthly_savings": 50,
+      "total_annual_savings": 600,
+      "created_at": "2026-05-23T10:57:42.095Z"
+    },
+    "c4610416-956a-41d7-8645-f155083a381e": {
+      "id": "c4610416-956a-41d7-8645-f155083a381e",
+      "input_data": {
+        "teamSize": 999,
+        "primaryUseCase": "coding",
+        "tools": [
+          {
+            "toolId": "cursor",
+            "planName": "Pro",
+            "seats": 3,
+            "monthlySpend": 6000
+          },
+          {
+            "toolId": "chatgpt",
+            "planName": "Plus",
+            "seats": 246,
+            "monthlySpend": 4920
+          },
+          {
+            "toolId": "copilot",
+            "planName": "Individual",
+            "seats": 10,
+            "monthlySpend": 1000
+          },
+          {
+            "toolId": "claude",
+            "planName": "Free",
+            "seats": 10,
+            "monthlySpend": 200
+          }
+        ]
+      },
+      "results_data": {
+        "totalCurrentSpend": 12120,
+        "totalRecommendedSpend": 6200,
+        "totalMonthlySavings": 5920,
+        "totalAnnualSavings": 71040,
+        "recommendations": [
+          {
+            "toolId": "cursor",
+            "toolName": "Cursor",
+            "currentPlan": "Pro",
+            "currentSpend": 6000,
+            "currentSeats": 3,
+            "recommendedPlan": "Pro",
+            "recommendedSpend": 6000,
+            "recommendedSeats": 3,
+            "monthlySavings": 0,
+            "annualSavings": 0,
+            "reason": "Your spend on this tool is already optimized.",
+            "priority": "Low",
+            "confidence": "High",
+            "confidenceReason": "Perfect match with team size capabilities and tier definitions.",
+            "effort": "Low"
+          },
+          {
+            "toolId": "chatgpt",
+            "toolName": "ChatGPT",
+            "currentPlan": "Plus",
+            "currentSpend": 4920,
+            "currentSeats": 246,
+            "recommendedPlan": "Free",
+            "recommendedSpend": 0,
+            "recommendedSeats": 0,
+            "monthlySavings": 4920,
+            "annualSavings": 59040,
+            "reason": "Your team relies on Claude for specialized writing/coding tasks. Drop ChatGPT to eliminate redundant chat assistant subscriptions.",
+            "priority": "High",
+            "confidence": "Medium",
+            "confidenceReason": "Consolidation of chat clients depends on team-wide preferences for GPT vs Claude models.",
+            "effort": "Medium"
+          },
+          {
+            "toolId": "copilot",
+            "toolName": "GitHub Copilot",
+            "currentPlan": "Individual",
+            "currentSpend": 1000,
+            "currentSeats": 10,
+            "recommendedPlan": "Hobby",
+            "recommendedSpend": 0,
+            "recommendedSeats": 0,
+            "monthlySavings": 1000,
+            "annualSavings": 12000,
+            "reason": "Your developers are already using Cursor which has built-in AI code-completions. GitHub Copilot is a redundant expenditure.",
+            "priority": "Critical",
+            "confidence": "High",
+            "confidenceReason": "IDE-level autocomplete features completely overlap with modern AI IDEs.",
+            "effort": "Low"
+          },
+          {
+            "toolId": "claude",
+            "toolName": "Claude",
+            "currentPlan": "Free",
+            "currentSpend": 200,
+            "currentSeats": 10,
+            "recommendedPlan": "Free",
+            "recommendedSpend": 200,
+            "recommendedSeats": 10,
+            "monthlySavings": 0,
+            "annualSavings": 0,
+            "reason": "Your spend on this tool is already optimized.",
+            "priority": "Low",
+            "confidence": "High",
+            "confidenceReason": "Perfect match with team size capabilities and tier definitions.",
+            "effort": "Low"
+          }
+        ],
+        "showCredexCta": true,
+        "isWellOptimized": false,
+        "healthScore": {
+          "overallScore": 80,
+          "overallLabel": "Moderate Overspend",
+          "categories": {
+            "planEfficiency": {
+              "score": 100,
+              "label": "Optimized",
+              "description": "Tuning seat sizes and plan tiers to eliminate vendor traps."
+            },
+            "toolRedundancy": {
+              "score": 30,
+              "label": "Significant Waste",
+              "description": "Removing tools with overlapping features like separate chat and IDE plugins."
+            },
+            "collaborationEfficiency": {
+              "score": 100,
+              "label": "Optimized",
+              "description": "Sizing collaboration features properly to match real active team sizes."
+            },
+            "apiCostEfficiency": {
+              "score": 100,
+              "label": "Optimized",
+              "description": "Implementing API integrations with context caching and load-routing."
+            },
+            "stackComplexity": {
+              "score": 70,
+              "label": "Moderate Overspend",
+              "description": "Managing overall tool count to avoid billing creep and administrative overhead."
+            }
+          }
+        },
+        "redundancies": [
+          {
+            "overlappingTools": [
+              "Cursor",
+              "GitHub Copilot"
+            ],
+            "message": "You are paying for GitHub Copilot licenses while developers are standardizing on Cursor IDE. Cursor has native AI autocomplete capabilities, making Copilot unnecessary.",
+            "consolidationStrategy": "Cancel all GitHub Copilot licenses and standardize the engineering team on Cursor Pro or Business.",
+            "potentialSavings": 1000
+          },
+          {
+            "overlappingTools": [
+              "ChatGPT",
+              "Claude"
+            ],
+            "message": "You have active subscriptions for both ChatGPT Plus/Team and Claude Pro/Team. These generic prompt interfaces duplicate specialized LLM tasks.",
+            "consolidationStrategy": "Standardize writing and logic tasks onto Claude Pro/Team and downgrade ChatGPT to the Free tier, or vice versa.",
+            "potentialSavings": 200
+          }
+        ],
+        "categoriesSpend": [
+          {
+            "category": "Coding",
+            "currentSpend": 7000,
+            "recommendedSpend": 6000,
+            "savings": 1000,
+            "percent": 58
+          },
+          {
+            "category": "Writing",
+            "currentSpend": 4920,
+            "recommendedSpend": 0,
+            "savings": 4920,
+            "percent": 41
+          },
+          {
+            "category": "Research",
+            "currentSpend": 200,
+            "recommendedSpend": 200,
+            "savings": 0,
+            "percent": 2
+          }
+        ],
+        "benchmarks": {
+          "spendPerDeveloper": 12,
+          "industryAverage": 75,
+          "percentile": 12,
+          "comparisonPercentage": 84,
+          "comparisonLabel": "lower",
+          "industryLabel": "AI-First Tech Startups"
+        },
+        "persona": {
+          "archetype": "Tool-Sprawl Scaling Startup",
+          "tagline": "Rapid tool adoption leading to massive billing creep.",
+          "maturityScore": 30,
+          "observation": "Your organization has quickly approved multiple AI tools (Cursor, Copilot, ChatGPT, Claude) across overlapping workflows. Different units are building separate bills, causing a hidden margin leak.",
+          "strategy": "Establish central SaaS provisioning. Sunset individual Copilot licenses in favor of Cursor IDE standard licenses and select either Claude Team or ChatGPT Team as the single corporate prompt suite."
+        },
+        "roadmap": [
+          {
+            "id": "ms-1",
+            "stage": "Immediate",
+            "title": "Consolidate Redundant Autocomplete Licenses",
+            "description": "Cancel duplicate GitHub Copilot seats for developers already standardizing on Cursor or Windsurf. De-provision licenses in your GitHub Org panel.",
+            "savings": 1000,
+            "priority": "Critical",
+            "complexity": "Low",
+            "roi": "Instant ROI"
+          },
+          {
+            "id": "ms-2",
+            "stage": "90-Day",
+            "title": "Standardize Corporate Prompt Suites",
+            "description": "Establish central provisioning policies. Standardize business workflows on a single chat partner (Claude Pro) to leverage central Projects billing.",
+            "savings": 4920,
+            "priority": "Medium",
+            "complexity": "Medium",
+            "roi": "5x ROI"
+          }
+        ],
+        "founderInsights": [
+          {
+            "title": "Decentralized SaaS Sprawl Margin Leaks",
+            "observation": "Different departments have independently approved premium AI subscriptions (Cursor, ChatGPT, Claude) without coordination, leading to overlapping seat counts.",
+            "impact": "You are sustaining a friction leak of **$71,040/year** out of your cash reserves — equivalent to the cost of purchasing multiple developer MacBooks or critical server nodes.",
+            "actionableStep": "Enforce a strict software procurement policy. Standardize IDEs on Cursor Pro and de-provision duplicate external chat licenses immediatey."
+          }
+        ]
+      },
+      "ai_summary": "### AI Spend Audit Summary\n\nYour team of **999** is currently spending **$12120/month** on AI utilities. We have identified concrete optimizations that will reduce this to **$6200/month**, instantly returning **$5920/month** (**$71040/year**) to your cash reserves.\n\n- **Biggest Leak:** The primary source of overspending is **ChatGPT**, where you could instantly save **$4920/month** by adjusting your Plus plan.\n- **Strategy:** Standardizing your engineering workflows onto Cursor Pro and cancelling standalone Copilot licenses is the most impactful immediate optimization.\n- **Action Plan:** Switch plan tiers to match active team seat counts and delete duplicate tools immediately to capture these savings.\n\n🎯 **Special Recommendation:** Since your savings exceed $500/month, we highly recommend booking a complimentary consultation with **Credex** to unlock additional enterprise perks, free vendor credits (up to $10k+), and customized corporate discounts.",
+      "total_monthly_savings": 5920,
+      "total_annual_savings": 71040,
+      "created_at": "2026-05-23T10:58:28.550Z"
     }
   },
   "leads": {
