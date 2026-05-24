@@ -12,6 +12,7 @@ import {
   AlertCircle,
   HelpCircle
 } from 'lucide-react';
+import { useAuth } from '@/components/AuthProvider';
 
 interface ToolFormInput {
   toolId: string;
@@ -22,6 +23,7 @@ interface ToolFormInput {
 
 export default function AuditFormPage() {
   const router = useRouter();
+  const { user } = useAuth();
   
   // Form states
   const [teamSize, setTeamSize] = useState<number | ''>(5);
@@ -200,7 +202,8 @@ export default function AuditFormPage() {
         body: JSON.stringify({
           teamSize: teamSize || 1,
           primaryUseCase,
-          tools: sanitizedTools
+          tools: sanitizedTools,
+          userId: user?.id
         })
       });
 

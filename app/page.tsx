@@ -279,10 +279,9 @@ export default function LandingPage() {
       {/* Interactive Benchmarking Comparison Section (FEATURE 2) */}
       {mounted && (
         <section className="relative z-10 max-w-4xl mx-auto px-6 py-20 space-y-12">
-          <div className="text-center max-w-2xl mx-auto space-y-2">
-            <span className="text-emerald-400 text-[10px] font-bold uppercase tracking-widest block">Active Data Comparisons</span>
-            <h2 className="font-display font-extrabold text-2xl md:text-3xl text-zinc-100">
-              Interactive Industry Benchmarks
+          <div className="text-center max-w-2xl mx-auto mb-10 space-y-2">
+            <h2 className="font-display font-extrabold text-2xl md:text-3xl text-zinc-100 tracking-tight">
+              Active Data <span className="bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">Comparisons</span>
             </h2>
             <p className="text-zinc-400 text-xs md:text-sm">
               See how typical early-stage startup clusters allocate budgets per developer. Click different team stages to view active baseline variations.

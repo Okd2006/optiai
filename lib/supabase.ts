@@ -2,6 +2,7 @@ import { AuditResults } from './audit-engine';
 
 export interface AuditRecord {
   id: string;
+  user_id?: string;
   input_data: unknown;
   results_data: AuditResults;
   ai_summary: string;
@@ -83,11 +84,7 @@ export const mockDb = {
   leads: globalRef.mockLeads as Map<string, LeadRecord>,
 };
 
-// Supabase client initialization (only if keys exist)
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-
-export const hasSupabase = !!(supabaseUrl && supabaseAnonKey);
+import { supabaseUrl, supabaseAnonKey, hasSupabase } from './supabase-config';
 
 export async function saveAudit(record: Omit<AuditRecord, 'created_at'>): Promise<AuditRecord> {
   const newRecord: AuditRecord = {
@@ -103,6 +100,7 @@ export async function saveAudit(record: Omit<AuditRecord, 'created_at'>): Promis
         .from('audits')
         .insert({
           id: newRecord.id,
+          user_id: newRecord.user_id,
           input_data: newRecord.input_data,
           results_data: newRecord.results_data,
           ai_summary: newRecord.ai_summary,
@@ -215,4 +213,37 @@ export async function saveLead(record: Omit<LeadRecord, 'id' | 'created_at'>): P
   }
 
   return newRecord;
+}
+
+export async function getAuditsByUserId(userId: string): Promise<AuditRecord[]> {
+  if (hasSupabase) {
+    try {
+      const { createClient } = await import('@supabase/supabase-js');
+      const supabase = createClient(supabaseUrl!, supabaseAnonKey!);
+      const { data, error } = await supabase
+        .from('audits')
+        .select('*')
+        .eq('user_id', userId)
+        .order('created_at', { ascending: false });
+      
+      if (error) throw error;
+      return data as AuditRecord[];
+    } catch (e) {
+      console.warn('Supabase getAuditsByUserId failed, checking local database:', e);
+    }
+  }
+
+  // Fallback to local file-based DB
+  try {
+    const db = loadDb();
+    const audits = Object.values(db.audits).filter(a => a.user_id === userId);
+    return audits.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+  } catch (err) {
+    console.error('Failed to read from local db.json:', err);
+  }
+
+  // Backup in-memory read
+  return Array.from(mockDb.audits.values())
+    .filter(a => a.user_id === userId)
+    .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
 }

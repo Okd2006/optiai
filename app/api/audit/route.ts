@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { runAudit, AuditInput } from '@/lib/audit-engine';
+import { runAudit } from '@/lib/audit-engine';
 import { generateAiSummary } from '@/lib/ai-summary';
-import { saveAudit, getAudit } from '@/lib/supabase';
+import { saveAudit, getAudit, getAuditsByUserId } from '@/lib/supabase';
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { teamSize, primaryUseCase, tools } = body as AuditInput;
+    const { teamSize, primaryUseCase, tools, userId } = body;
 
     if (!teamSize || !primaryUseCase || !Array.isArray(tools)) {
       return NextResponse.json({ error: 'Invalid or missing fields in request body.' }, { status: 400 });
@@ -27,6 +27,7 @@ export async function POST(req: NextRequest) {
     // 3. Save to database (with automatic in-memory fallback)
     const saved = await saveAudit({
       id: auditId,
+      user_id: userId,
       input_data: { teamSize, primaryUseCase, tools },
       results_data: results,
       ai_summary: aiSummary,
@@ -45,12 +46,18 @@ export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
     const id = searchParams.get('id');
+    const userId = searchParams.get('userId');
 
-    if (!id) {
-      return NextResponse.json({ error: 'Missing required audit ID parameter.' }, { status: 400 });
+    if (!id && !userId) {
+      return NextResponse.json({ error: 'Missing required parameter: id or userId.' }, { status: 400 });
     }
 
-    const audit = await getAudit(id);
+    if (userId) {
+      const audits = await getAuditsByUserId(userId);
+      return NextResponse.json(audits, { status: 200 });
+    }
+
+    const audit = await getAudit(id!);
 
     if (!audit) {
       return NextResponse.json({ error: 'Audit record not found.' }, { status: 404 });
@@ -62,3 +69,4 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'Failed to retrieve audit record.' }, { status: 500 });
   }
 }
+
