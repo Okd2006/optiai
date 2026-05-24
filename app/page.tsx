@@ -1,4 +1,8 @@
+'use client';
+
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Layers, 
   Users, 
@@ -6,22 +10,42 @@ import {
   Sparkles, 
   CheckCircle2, 
   ArrowRight,
-  DollarSign
+  TrendingDown,
+  DollarSign,
+  Activity,
+  Bot,
+  Zap,
+  ArrowUpRight
 } from 'lucide-react';
-import { TOOL_LOGOS } from '@/components/BrandLogos';
+import { TOOL_LOGOS, OptiAiLogo } from '@/components/BrandLogos';
 
 export default function LandingPage() {
+  const [mounted, setMounted] = useState(false);
+  const [dashboardOptimized, setDashboardOptimized] = useState(false);
+  const [benchmarkProfile, setBenchmarkProfile] = useState<'seed' | 'saas' | 'ai-first'>('saas');
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const supportedTools = [
-    { name: 'Cursor', desc: 'AI Coding IDE', logoKey: 'cursor', color: 'border-emerald-500/10 text-emerald-400 hover:border-emerald-500/40 hover:shadow-emerald-500/5' },
-    { name: 'Claude', desc: 'Anthropic Assistant', logoKey: 'claude', color: 'border-amber-500/10 text-amber-400 hover:border-amber-500/40 hover:shadow-amber-500/5' },
-    { name: 'ChatGPT', desc: 'OpenAI Plus & Teams', logoKey: 'chatgpt', color: 'border-teal-500/10 text-teal-400 hover:border-teal-500/40 hover:shadow-teal-500/5' },
-    { name: 'GitHub Copilot', desc: 'IDE Completion', logoKey: 'copilot', color: 'border-violet-500/10 text-violet-400 hover:border-violet-500/40 hover:shadow-violet-500/5' },
-    { name: 'Gemini', desc: 'Google Pro Assistant', logoKey: 'gemini', color: 'border-blue-500/10 text-blue-400 hover:border-blue-500/40 hover:shadow-blue-500/5' },
-    { name: 'Windsurf', desc: 'AI Code Editor', logoKey: 'windsurf', color: 'border-cyan-500/10 text-cyan-400 hover:border-cyan-500/40 hover:shadow-cyan-500/5' },
-    { name: 'OpenAI API', desc: 'GPT-4o & Reasoning API', logoKey: 'openai_api', color: 'border-teal-600/10 text-teal-500 hover:border-teal-600/40 hover:shadow-teal-600/5' },
-    { name: 'Anthropic API', desc: 'Claude Sonnet API', logoKey: 'anthropic_api', color: 'border-orange-500/10 text-orange-400 hover:border-orange-500/40 hover:shadow-orange-500/5' }
+    { name: 'Cursor', desc: 'AI Coding IDE', logoKey: 'cursor' },
+    { name: 'Claude', desc: 'Anthropic Assistant', logoKey: 'claude' },
+    { name: 'ChatGPT', desc: 'OpenAI Plus & Teams', logoKey: 'chatgpt' },
+    { name: 'GitHub Copilot', desc: 'IDE Completion', logoKey: 'copilot' },
+    { name: 'Gemini', desc: 'Google Pro Assistant', logoKey: 'gemini' },
+    { name: 'Windsurf', desc: 'AI Code Editor', logoKey: 'windsurf' },
+    { name: 'OpenAI API', desc: 'GPT-4o API costs', logoKey: 'openai_api' },
+    { name: 'Anthropic API', desc: 'Claude API costs', logoKey: 'anthropic_api' }
   ];
 
+  const benchmarkData = {
+    seed: { label: 'Seed-Stage Teams', avg: 30, userAvg: 48, desc: 'Highly bootstrapped environments prioritizing lean engineering runway.' },
+    saas: { label: 'Series-A SaaS Startups', avg: 55, userAvg: 92, desc: 'Growing businesses managing scaling AI seat distribution models.' },
+    'ai-first': { label: 'AI-First Tech Labs', avg: 85, userAvg: 165, desc: 'Advanced engineering teams running high-payload direct LLM calls.' }
+  };
+
+  const currentBenchmark = benchmarkData[benchmarkProfile];
 
   const faqItems = [
     {
@@ -43,80 +67,318 @@ export default function LandingPage() {
   ];
 
   return (
-    <div className="relative overflow-hidden min-h-screen">
-      {/* Background Glowing Blobs */}
-      <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] rounded-full bg-emerald-500/5 blur-[120px] pointer-events-none animate-soft-pulse" />
-      <div className="absolute bottom-[20%] right-[-10%] w-[600px] h-[600px] rounded-full bg-teal-500/5 blur-[150px] pointer-events-none" />
+    <div className="relative overflow-hidden min-h-screen bg-zinc-950 text-zinc-100 font-sans antialiased">
+      {/* Background Calm Gradients */}
+      <div className="absolute top-0 left-1/4 w-[600px] h-[300px] rounded-full bg-emerald-500/[0.02] blur-[150px] pointer-events-none" />
+      <div className="absolute bottom-[20%] right-[-10%] w-[500px] h-[500px] rounded-full bg-cyan-500/[0.015] blur-[180px] pointer-events-none" />
 
       {/* Hero Section */}
-      <section className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 pt-20 pb-16 md:pt-32 md:pb-24 text-center">
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-emerald-500/10 border border-emerald-500/20 rounded-full text-xs font-semibold text-emerald-400 mb-6 shadow-sm">
-          <Sparkles className="h-3 w-3 animate-spin" style={{ animationDuration: '4s' }} />
-          <span>Optimize your AI tool spend in seconds.</span>
+      <section className="relative z-10 max-w-5xl mx-auto px-6 md:px-12 pt-20 pb-16 md:pt-28 md:pb-20 text-center space-y-8">
+        <motion.div 
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          className="inline-flex items-center gap-2 px-3 py-1 bg-zinc-900 border border-zinc-800 rounded-full text-[11px] font-semibold text-zinc-400 shadow-sm"
+        >
+          <Sparkles className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
+          <span>Real-time Capital Optimisation Engine</span>
+        </motion.div>
+        
+        <div className="space-y-4">
+          <motion.h1 
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+            className="font-display font-extrabold text-4xl sm:text-6xl tracking-tight leading-[1.05] text-zinc-100 max-w-3xl mx-auto"
+          >
+            Optimize Your <span className="bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">AI Spend</span>
+          </motion.h1>
+          
+          <motion.p 
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+            className="text-sm md:text-base text-zinc-400 max-w-xl mx-auto leading-relaxed"
+          >
+            Most startups overpay for AI tools. OptiAI identifies hidden inefficiencies across Cursor, Claude, ChatGPT, Copilot, and more. No account connections required.
+          </motion.p>
         </div>
-        
-        <h1 className="font-display font-black text-4xl sm:text-6xl md:text-7xl text-white tracking-tight leading-[1.1] mb-6 max-w-4xl mx-auto">
-          Optimize Your <span className="bg-gradient-to-r from-emerald-400 via-teal-400 to-emerald-500 bg-clip-text text-transparent">AI Spend</span>
-        </h1>
-        
-        <p className="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed">
-          Discover hidden savings across Cursor, Claude, ChatGPT, Copilot, and more. Stop paying retail pricing for duplicate seats.
-        </p>
 
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+        <motion.div 
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+          className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-4"
+        >
           <Link 
             href="/audit" 
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold px-8 py-4 rounded-xl shadow-xl shadow-emerald-500/10 hover:shadow-emerald-500/20 transition-all cursor-pointer group"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 bg-zinc-100 hover:bg-zinc-200 text-zinc-950 font-semibold px-6 py-3 rounded-lg shadow-sm hover:shadow-zinc-100/5 transition cursor-pointer text-xs"
           >
             <span>Run Free Audit</span>
-            <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition" />
+            <ArrowRight className="h-3.5 w-3.5" />
           </Link>
           <a 
             href="#how-it-works" 
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 border border-slate-800 hover:border-slate-700 bg-slate-900/40 hover:bg-slate-900/60 px-8 py-4 rounded-xl text-slate-300 hover:text-white transition font-medium"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 border border-zinc-800 hover:border-zinc-700 bg-zinc-900/30 hover:bg-zinc-900/60 px-6 py-3 rounded-lg text-zinc-300 hover:text-white transition font-semibold text-xs"
           >
-            See How It Works
+            See Methodology
           </a>
-        </div>
+        </motion.div>
+
+        {/* Dynamic Hydrated Interactive Dashboard Preview (FEATURE 1) */}
+        {mounted && (
+          <motion.div
+            initial={{ opacity: 0, y: 25 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1.0, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            className="w-full max-w-4xl mx-auto bg-zinc-950 border border-zinc-900 shadow-2xl rounded-2xl overflow-hidden text-left mt-8 shadow-premium"
+          >
+            {/* Header controls bar */}
+            <div className="bg-zinc-900/60 border-b border-zinc-900/80 px-4 py-3 flex items-center justify-between gap-4">
+              <div className="flex items-center gap-1.5">
+                <span className="h-2.5 w-2.5 rounded-full bg-zinc-800" />
+                <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Interactive Audit Simulation</span>
+              </div>
+              <div className="flex bg-zinc-950 p-0.5 border border-zinc-800 rounded-lg">
+                <button
+                  onClick={() => setDashboardOptimized(false)}
+                  className={`text-[9px] font-semibold px-3 py-1 rounded-md transition ${!dashboardOptimized ? 'bg-zinc-900 text-zinc-100 shadow-sm' : 'text-zinc-500 hover:text-zinc-300'}`}
+                >
+                  Before Optimization
+                </button>
+                <button
+                  onClick={() => setDashboardOptimized(true)}
+                  className={`text-[9px] font-semibold px-3 py-1 rounded-md transition ${dashboardOptimized ? 'bg-zinc-900 text-zinc-100 shadow-sm' : 'text-zinc-500 hover:text-zinc-300'}`}
+                >
+                  After Optimization
+                </button>
+              </div>
+            </div>
+
+            {/* Dashboard Contents */}
+            <div className="p-6 grid md:grid-cols-5 gap-6">
+              
+              {/* Left Column stats */}
+              <div className="md:col-span-2 space-y-4 pr-0 md:pr-4 border-r border-zinc-900/60">
+                <div className="p-4 bg-zinc-900/20 border border-zinc-900 rounded-xl space-y-1">
+                  <span className="text-[9px] font-bold text-zinc-500 uppercase tracking-widest block">Audit Spend Health Score</span>
+                  <div className="flex items-baseline gap-2">
+                    <span className={`font-display font-black text-3xl transition duration-500 ${dashboardOptimized ? 'text-emerald-400' : 'text-amber-400'}`}>
+                      {dashboardOptimized ? '92' : '54'}
+                    </span>
+                    <span className="text-[9px] text-zinc-600 font-bold">/ 100</span>
+                  </div>
+                  <div className="w-full bg-zinc-900 h-1 rounded-full overflow-hidden mt-1.5">
+                    <div 
+                      className={`h-full rounded-full transition-all duration-700 ${dashboardOptimized ? 'bg-emerald-400' : 'bg-amber-400'}`} 
+                      style={{ width: dashboardOptimized ? '92%' : '54%' }}
+                    />
+                  </div>
+                  <span className="text-[9px] text-zinc-500 block leading-tight pt-1">
+                    {dashboardOptimized ? '✓ Optimized license provisioning' : '⚠ Significant waste on redundant seats'}
+                  </span>
+                </div>
+
+                <div className="p-4 bg-zinc-900/20 border border-zinc-900 rounded-xl space-y-1">
+                  <span className="text-[9px] font-bold text-zinc-500 uppercase tracking-widest block">Current AI Tool Bill</span>
+                  <div className="flex items-baseline gap-2">
+                    <span className="font-display font-extrabold text-2xl text-zinc-200">
+                      {dashboardOptimized ? '$620' : '$1,440'}
+                    </span>
+                    <span className="text-[9px] text-zinc-500 font-bold">/ month</span>
+                  </div>
+                  <span className="text-[9px] text-zinc-500 block leading-tight">
+                    {dashboardOptimized ? 'Reallocated to reserves' : 'Sustaining license overlaps'}
+                  </span>
+                </div>
+              </div>
+
+              {/* Right Column recommendations */}
+              <div className="md:col-span-3 space-y-3">
+                <span className="text-[9px] font-bold text-zinc-500 uppercase tracking-widest block">Identified Inefficiencies</span>
+                
+                <div className="space-y-2">
+                  {/* Item 1 */}
+                  <div className="p-3 bg-zinc-900/30 border border-zinc-900 rounded-xl flex items-center justify-between gap-4">
+                    <div className="space-y-0.5">
+                      <h4 className="text-[11px] font-bold text-zinc-200">ChatGPT Team minimum overspend</h4>
+                      <p className="text-[9px] text-zinc-500">Startup has 1 user billed on a strict 2-seat minimum plan tier.</p>
+                    </div>
+                    <div className="text-right">
+                      <span className={`text-[10px] font-bold block ${dashboardOptimized ? 'text-zinc-500 line-through' : 'text-rose-400'}`}>$60/mo</span>
+                      <span className="text-[9px] text-emerald-400 font-semibold block">{dashboardOptimized ? 'Saves $30/mo' : 'Overpaying'}</span>
+                    </div>
+                  </div>
+
+                  {/* Item 2 */}
+                  <div className="p-3 bg-zinc-900/30 border border-zinc-900 rounded-xl flex items-center justify-between gap-4">
+                    <div className="space-y-0.5">
+                      <h4 className="text-[11px] font-bold text-zinc-200">Redundant GitHub Copilot seats</h4>
+                      <p className="text-[9px] text-zinc-500">Developers already converted to Cursor IDE with native completions.</p>
+                    </div>
+                    <div className="text-right">
+                      <span className={`text-[10px] font-bold block ${dashboardOptimized ? 'text-zinc-500 line-through' : 'text-rose-400'}`}>$200/mo</span>
+                      <span className="text-[9px] text-emerald-400 font-semibold block">{dashboardOptimized ? 'Saves $200/mo' : 'Redundant'}</span>
+                    </div>
+                  </div>
+
+                  {/* Item 3 */}
+                  <div className="p-3 bg-zinc-900/30 border border-zinc-900 rounded-xl flex items-center justify-between gap-4">
+                    <div className="space-y-0.5">
+                      <h4 className="text-[11px] font-bold text-zinc-200">Claude Team seat sprawl</h4>
+                      <p className="text-[9px] text-zinc-500">Small group of 3 paying for Anthropic\'s 5-seat minimum plan.</p>
+                    </div>
+                    <div className="text-right">
+                      <span className={`text-[10px] font-bold block ${dashboardOptimized ? 'text-zinc-500 line-through' : 'text-rose-400'}`}>$150/mo</span>
+                      <span className="text-[9px] text-emerald-400 font-semibold block">{dashboardOptimized ? 'Saves $90/mo' : 'Unused seats'}</span>
+                    </div>
+                  </div>
+                </div>
+
+                {dashboardOptimized && (
+                  <motion.div 
+                    initial={{ opacity: 0, scale: 0.98 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="p-3 bg-emerald-500/[0.04] border border-emerald-500/10 rounded-xl text-center text-[10px] text-emerald-400 font-semibold tracking-wide"
+                  >
+                    🎉 Optimization Complete: Reclaimed $320/month ($3,840/year) in capital runway!
+                  </motion.div>
+                )}
+              </div>
+
+            </div>
+          </motion.div>
+        )}
       </section>
 
-      {/* Supported Tools Logos Section */}
-      <section className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 py-16 border-y border-slate-800/60 bg-[#070b13]/60 backdrop-blur-sm">
-        <h2 className="text-center text-xs font-semibold text-slate-500 uppercase tracking-widest mb-10">
+      {/* Supported Tools Registry Section */}
+      <section className="relative z-10 max-w-6xl mx-auto px-6 md:px-12 py-12 border-t border-b border-zinc-900 bg-zinc-950/60 backdrop-blur-sm">
+        <h2 className="text-center text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-8">
           Supported AI Stack Subscriptions
         </h2>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-4">
           {supportedTools.map((t, idx) => {
             const logoConfig = TOOL_LOGOS[t.logoKey];
             return (
               <div 
                 key={idx} 
-                className={`flex flex-col items-center justify-center p-6 border rounded-2xl bg-slate-900/30 backdrop-blur-sm ${t.color} text-center hover:scale-103 hover:bg-slate-900/50 transition-all duration-250 group cursor-default shadow-lg`}
+                className="flex flex-col items-center justify-center p-4 border border-zinc-900 rounded-xl bg-zinc-900/10 text-center hover:border-zinc-800 transition duration-200 group cursor-default shadow-sm"
               >
-                {/* Logo Icon with volumetric HSL glow */}
-                <div className={`p-4 rounded-xl mb-4 border transition duration-250 group-hover:scale-110 flex items-center justify-center ${logoConfig ? logoConfig.bgGlow + ' ' + logoConfig.color.split(' ')[1] : 'bg-slate-800/40 border-slate-700/40'}`}>
-                  {logoConfig ? logoConfig.logo({ className: "w-8 h-8" }) : null}
+                {/* Monochrome inline SVG logo with subtle hover branded transitions */}
+                <div className="p-3 rounded-lg mb-2.5 bg-zinc-950 border border-zinc-900 flex items-center justify-center grayscale group-hover:grayscale-0 transition duration-300">
+                  {logoConfig ? logoConfig.logo({ className: "w-5 h-5" }) : null}
                 </div>
-                <span className="font-display font-bold text-base text-white mb-1 tracking-tight">{t.name}</span>
-                <span className="text-xs text-slate-400 font-medium">{t.desc}</span>
+                <span className="font-semibold text-xs text-zinc-300 mb-0.5 tracking-tight group-hover:text-white transition">{t.name}</span>
+                <span className="text-[9px] text-zinc-500 font-medium">{t.desc.split(' ')[0]}</span>
               </div>
             );
           })}
         </div>
       </section>
 
+      {/* Interactive Benchmarking Comparison Section (FEATURE 2) */}
+      {mounted && (
+        <section className="relative z-10 max-w-4xl mx-auto px-6 py-20 space-y-12">
+          <div className="text-center max-w-2xl mx-auto space-y-2">
+            <span className="text-emerald-400 text-[10px] font-bold uppercase tracking-widest block">Active Data Comparisons</span>
+            <h2 className="font-display font-extrabold text-2xl md:text-3xl text-zinc-100">
+              Interactive Industry Benchmarks
+            </h2>
+            <p className="text-zinc-400 text-xs md:text-sm">
+              See how typical early-stage startup clusters allocate budgets per developer. Click different team stages to view active baseline variations.
+            </p>
+          </div>
+
+          <div className="bg-zinc-900/20 border border-zinc-900 rounded-2xl p-6 md:p-8 space-y-6 shadow-premium">
+            {/* Benchmark Tab controls */}
+            <div className="flex bg-zinc-950 p-1 border border-zinc-800 rounded-xl gap-1 max-w-md mx-auto">
+              <button 
+                onClick={() => setBenchmarkProfile('seed')}
+                className={`flex-1 text-[10px] font-bold py-2 rounded-lg transition ${benchmarkProfile === 'seed' ? 'bg-zinc-900 text-zinc-100 shadow-sm' : 'text-zinc-500 hover:text-zinc-300'}`}
+              >
+                Seed Stage Team
+              </button>
+              <button 
+                onClick={() => setBenchmarkProfile('saas')}
+                className={`flex-1 text-[10px] font-bold py-2 rounded-lg transition ${benchmarkProfile === 'saas' ? 'bg-zinc-900 text-zinc-100 shadow-sm' : 'text-zinc-500 hover:text-zinc-300'}`}
+              >
+                Series-A SaaS
+              </button>
+              <button 
+                onClick={() => setBenchmarkProfile('ai-first')}
+                className={`flex-1 text-[10px] font-bold py-2 rounded-lg transition ${benchmarkProfile === 'ai-first' ? 'bg-zinc-900 text-zinc-100 shadow-sm' : 'text-zinc-500 hover:text-zinc-300'}`}
+              >
+                AI-First Tech
+              </button>
+            </div>
+
+            {/* Benchmarking Comparative Details */}
+            <div className="grid md:grid-cols-5 gap-6 items-center">
+              {/* Descriptions (2/5) */}
+              <div className="md:col-span-2 space-y-3">
+                <span className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold">Median Spends Summary</span>
+                <h3 className="text-sm font-bold text-zinc-200">{currentBenchmark.label}</h3>
+                <p className="text-[11px] text-zinc-400 leading-relaxed leading-4">
+                  {currentBenchmark.desc}
+                </p>
+                <div className="border-t border-zinc-900 pt-3 flex items-center justify-between text-[10px] text-zinc-400">
+                  <span>Median Cost/Engineer:</span>
+                  <strong className="text-zinc-100">${currentBenchmark.avg}/mo</strong>
+                </div>
+              </div>
+
+              {/* Graphical Comparators (3/5) */}
+              <div className="md:col-span-3 space-y-4 p-4 rounded-xl bg-zinc-950/40 border border-zinc-900">
+                <span className="text-[9px] text-zinc-500 uppercase tracking-widest font-bold block">Typical Unaudited Spends vs Optimized Median</span>
+                
+                {/* Unaudited Developer Spend */}
+                <div className="space-y-1.5">
+                  <div className="flex items-center justify-between text-[10px] text-zinc-400">
+                    <span>Average Startup Developer (Sprawl)</span>
+                    <strong className="text-rose-400 font-bold">${currentBenchmark.userAvg}/mo</strong>
+                  </div>
+                  <div className="w-full h-3 bg-zinc-900 rounded-full overflow-hidden">
+                    <div className="h-full bg-rose-500 rounded-full" style={{ width: '100%' }} />
+                  </div>
+                </div>
+
+                {/* Optimized Baseline */}
+                <div className="space-y-1.5">
+                  <div className="flex items-center justify-between text-[10px] text-zinc-400">
+                    <span>Optimized Baseline (OptiAI Target)</span>
+                    <strong className="text-emerald-400 font-bold">${currentBenchmark.avg}/mo</strong>
+                  </div>
+                  <div className="w-full h-3 bg-zinc-900 rounded-full overflow-hidden">
+                    <div 
+                      className="h-full bg-emerald-500 rounded-full transition-all duration-500" 
+                      style={{ width: `${Math.round((currentBenchmark.avg / currentBenchmark.userAvg) * 100)}%` }}
+                    />
+                  </div>
+                </div>
+
+                <div className="text-[9px] text-zinc-500 italic pt-1 border-t border-zinc-900 text-center">
+                  Startup spend audits yield an average of **{Math.round((1 - currentBenchmark.avg / currentBenchmark.userAvg) * 100)}% cost reductions** per seat.
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </section>
+      )}
+
       {/* How It Works Section */}
-      <section id="how-it-works" className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 py-24">
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <h2 className="font-display font-extrabold text-3xl md:text-4xl text-white mb-4">
+      <section id="how-it-works" className="relative z-10 max-w-5xl mx-auto px-6 md:px-12 py-20 border-t border-zinc-900">
+        <div className="text-center max-w-2xl mx-auto mb-16 space-y-2">
+          <span className="text-emerald-400 text-[10px] font-bold uppercase tracking-widest block">Audit Methodology</span>
+          <h2 className="font-display font-extrabold text-2xl md:text-3xl text-zinc-100">
             How It Works
           </h2>
-          <p className="text-slate-400 text-sm md:text-base">
-            Identify software waste in three rapid, privacy-first steps. No integrations required.
+          <p className="text-zinc-400 text-xs md:text-sm">
+            Identify software waste in three rapid, privacy-first steps. No connections or live logins required.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-3 gap-6">
           {[
             {
               step: '01',
@@ -134,14 +396,14 @@ export default function LandingPage() {
               desc: 'Get a shareable report, a custom AI summary, and partner credit recommendations to slash your bill.'
             }
           ].map((item, idx) => (
-            <div key={idx} className="glass p-8 rounded-2xl relative hover-card">
-              <span className="font-display font-black text-6xl text-emerald-500/10 absolute top-4 right-6 select-none">
+            <div key={idx} className="glass p-6 rounded-xl relative border border-zinc-900 hover:border-zinc-800 transition duration-200">
+              <span className="font-display font-black text-4xl text-emerald-500/5 absolute top-4 right-5 select-none">
                 {item.step}
               </span>
-              <h3 className="font-display font-bold text-lg text-white mb-3 mt-4">
+              <h3 className="font-bold text-xs text-zinc-100 mb-2 mt-2 uppercase tracking-wide">
                 {item.title}
               </h3>
-              <p className="text-sm text-slate-400 leading-relaxed">
+              <p className="text-xs text-zinc-400 leading-relaxed leading-5">
                 {item.desc}
               </p>
             </div>
@@ -150,125 +412,76 @@ export default function LandingPage() {
       </section>
 
       {/* Benefits Section */}
-      <section className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 py-16 bg-[#060a12]/40 rounded-3xl border border-slate-800/80">
+      <section className="relative z-10 max-w-5xl mx-auto px-6 md:px-12 py-16 bg-zinc-950 rounded-2xl border border-zinc-900 shadow-premium">
         <div className="grid md:grid-cols-2 gap-12 items-center">
-          <div>
-            <span className="text-emerald-400 text-xs font-bold uppercase tracking-wider">Benefits</span>
-            <h2 className="font-display font-extrabold text-3xl md:text-4xl text-white mt-2 mb-6">
-              Maximize your startup’s capital efficiency
-            </h2>
-            <p className="text-slate-400 text-sm leading-relaxed mb-8">
+          <div className="space-y-6">
+            <div>
+              <span className="text-emerald-400 text-[10px] font-bold uppercase tracking-wider block">Capital Efficiency</span>
+              <h2 className="font-display font-extrabold text-2xl md:text-3xl text-zinc-100 mt-1">
+                Maximize your startup’s capital runway
+              </h2>
+            </div>
+            <p className="text-zinc-400 text-xs leading-relaxed leading-5">
               Every dollar spent on redundant AI subscriptions is a dollar not spent on building your product or hiring talent. OptiAI streamlines engineering software spend seamlessly.
             </p>
             <div className="space-y-4">
               {[
-                { title: 'Zero Login Integration', desc: 'No sensitive keys or accounts linking required.' },
-                { title: 'Remove Duplicate Tools', desc: 'Identify seats using overlapping code extensions.' },
-                { title: 'Credex Partner Benefits', desc: 'Access startup discount brokers for free credits.' }
+                { title: 'Zero Login Integration', desc: 'No sensitive keys, password sharing, or live database logins required.' },
+                { title: 'Remove Duplicate Tools', desc: 'Identify seats using overlapping code extensions (Cursor vs Copilot).' },
+                { title: 'Credex Partner Benefits', desc: 'Access startup discount brokers for free acceleration vendor credits.' }
               ].map((b, idx) => (
                 <div key={idx} className="flex gap-3">
-                  <CheckCircle2 className="h-5 w-5 text-emerald-400 shrink-0 mt-0.5" />
+                  <CheckCircle2 className="h-4.5 w-4.5 text-emerald-400 shrink-0 mt-0.5" />
                   <div>
-                    <h4 className="text-sm font-bold text-white">{b.title}</h4>
-                    <p className="text-xs text-slate-400">{b.desc}</p>
+                    <h4 className="text-xs font-bold text-zinc-200">{b.title}</h4>
+                    <p className="text-[10px] text-zinc-500 leading-normal">{b.desc}</p>
                   </div>
                 </div>
               ))}
             </div>
           </div>
           <div className="grid grid-cols-2 gap-4">
-            <div className="glass p-6 rounded-2xl flex flex-col justify-between h-40">
-              <DollarSign className="h-8 w-8 text-emerald-400" />
+            <div className="glass p-5 rounded-xl flex flex-col justify-between h-36">
+              <DollarSign className="h-6 w-6 text-emerald-400" />
               <div>
-                <span className="block font-display font-bold text-2xl text-white">30%+</span>
-                <span className="text-xs text-slate-400">Average Savings Identified</span>
+                <span className="block font-display font-bold text-xl text-zinc-100">30%+</span>
+                <span className="text-[10px] text-zinc-500">Average Savings Identified</span>
               </div>
             </div>
-            <div className="glass p-6 rounded-2xl flex flex-col justify-between h-40">
-              <Users className="h-8 w-8 text-emerald-400" />
+            <div className="glass p-5 rounded-xl flex flex-col justify-between h-36">
+              <Users className="h-6 w-6 text-emerald-400" />
               <div>
-                <span className="block font-display font-bold text-2xl text-white">2–50</span>
-                <span className="text-xs text-slate-400">Sized Team Optimization</span>
+                <span className="block font-display font-bold text-xl text-zinc-100">2–50</span>
+                <span className="text-[10px] text-zinc-500">Sized Team Optimization</span>
               </div>
             </div>
-            <div className="glass p-6 rounded-2xl flex flex-col justify-between h-40 col-span-2">
-              <Layers className="h-8 w-8 text-emerald-400" />
+            <div className="glass p-5 rounded-xl flex flex-col justify-between h-36 col-span-2">
+              <Layers className="h-6 w-6 text-emerald-400" />
               <div>
-                <span className="block font-display font-bold text-lg text-white">Full Stack Audits</span>
-                <span className="text-xs text-slate-400">Calculates IDEs, custom APIs, and chat seats</span>
+                <span className="block font-display font-bold text-sm text-zinc-100">Full Stack Audits</span>
+                <span className="text-[10px] text-zinc-500">Calculates IDEs, custom APIs, and chat subscription seats</span>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Social Proof Testimonials */}
-      <section className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 py-24">
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <h2 className="font-display font-extrabold text-3xl md:text-4xl text-white mb-4">
-            Trusted by CTOs & Founders
-          </h2>
-          <p className="text-slate-400 text-sm">
-            Here is how startup leaders optimized their early burn-rate using OptiAI.
-          </p>
-        </div>
-
-        <div className="grid md:grid-cols-3 gap-8">
-          {[
-            {
-              quote: "OptiAI revealed we were paying for GitHub Copilot for devs who had already converted to Cursor. We saved $640/month in five minutes.",
-              author: "Alex Rivers",
-              role: "CTO, Forge.io",
-              logo: "bg-blue-500/10 text-blue-400"
-            },
-            {
-              quote: "As a small team of three, Claude Team was charging us a 5-seat minimum. Downsizing to Claude Pro was an instant $90/mo savings.",
-              author: "Sara Jenkins",
-              role: "Co-Founder, Synthetix",
-              logo: "bg-orange-500/10 text-orange-400"
-            },
-            {
-              quote: "The Credex partner perk alone was worth it. They helped us secure $10,000 in OpenAI API credits. Unbelievable value.",
-              author: "Marcus Chen",
-              role: "Founder, PeakML",
-              logo: "bg-emerald-500/10 text-emerald-400"
-            }
-          ].map((t, idx) => (
-            <div key={idx} className="glass p-8 rounded-2xl hover:scale-102 transition duration-200 flex flex-col justify-between">
-              <p className="text-slate-300 text-sm italic leading-relaxed mb-6">
-                &quot;{t.quote}&quot;
-              </p>
-              <div className="flex items-center gap-3">
-                <div className={`h-9 w-9 rounded-full ${t.logo} flex items-center justify-center font-bold text-sm`}>
-                  {t.author[0]}
-                </div>
-                <div>
-                  <h4 className="text-xs font-bold text-white">{t.author}</h4>
-                  <p className="text-[10px] text-slate-500">{t.role}</p>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
       {/* FAQs Section */}
-      <section id="faq" className="relative z-10 max-w-4xl mx-auto px-6 py-12">
-        <div className="text-center mb-16">
-          <HelpCircle className="h-10 w-10 text-emerald-400 mx-auto mb-3" />
-          <h2 className="font-display font-extrabold text-3xl text-white">
+      <section id="faq" className="relative z-10 max-w-4xl mx-auto px-6 py-20 border-t border-zinc-900">
+        <div className="text-center mb-12 space-y-2">
+          <HelpCircle className="h-8 w-8 text-emerald-400 mx-auto" />
+          <h2 className="font-display font-extrabold text-2xl text-zinc-105">
             Frequently Asked Questions
           </h2>
         </div>
 
-        <div className="space-y-6">
+        <div className="grid md:grid-cols-2 gap-4">
           {faqItems.map((item, idx) => (
-            <div key={idx} className="glass p-6 rounded-xl border border-slate-800">
-              <h3 className="font-display font-bold text-sm sm:text-base text-white mb-2 flex items-center gap-2">
-                <span className="text-emerald-400 font-black">?</span>
+            <div key={idx} className="glass p-5 rounded-xl border border-zinc-900 flex flex-col justify-between">
+              <h3 className="font-bold text-xs sm:text-sm text-zinc-200 mb-2">
                 {item.q}
               </h3>
-              <p className="text-xs sm:text-sm text-slate-400 leading-relaxed pl-4">
+              <p className="text-[11px] text-zinc-400 leading-relaxed leading-5">
                 {item.a}
               </p>
             </div>
@@ -277,22 +490,22 @@ export default function LandingPage() {
       </section>
 
       {/* Bottom Call-to-Action CTA */}
-      <section className="relative z-10 max-w-5xl mx-auto px-6 md:px-12 py-20 text-center">
-        <div className="glass p-12 md:p-16 rounded-3xl border border-emerald-500/20 relative overflow-hidden">
-          <div className="absolute top-[-20%] right-[-20%] w-[300px] h-[300px] rounded-full bg-emerald-500/5 blur-[80px]" />
+      <section className="relative z-10 max-w-4xl mx-auto px-6 pb-20 text-center">
+        <div className="glass p-10 md:p-14 rounded-2xl border border-zinc-900 relative overflow-hidden shadow-premium">
+          <div className="absolute top-[-20%] right-[-20%] w-[300px] h-[300px] rounded-full bg-emerald-500/[0.015] blur-[80px]" />
           
-          <h2 className="font-display font-extrabold text-3xl md:text-5xl text-white mb-4">
+          <h2 className="font-display font-extrabold text-2xl md:text-3xl text-zinc-100 mb-2">
             Ready to optimize your burn rate?
           </h2>
-          <p className="text-slate-400 text-sm md:text-base max-w-xl mx-auto mb-8">
-            Run a completely free spend analysis in seconds and reclaim your capital.
+          <p className="text-zinc-400 text-xs max-w-md mx-auto mb-6">
+            Run a completely free spend analysis in seconds and reclaim your engineering capital.
           </p>
           <Link 
             href="/audit" 
-            className="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold px-8 py-4 rounded-xl shadow-lg transition duration-200 cursor-pointer"
+            className="inline-flex items-center gap-1.5 bg-zinc-100 hover:bg-zinc-200 text-zinc-950 font-bold px-6 py-3 rounded-lg text-xs shadow-sm hover:shadow-zinc-100/5 transition cursor-pointer"
           >
             <span>Run Free Audit Now</span>
-            <ArrowRight className="h-4 w-4" />
+            <ArrowRight className="h-3.5 w-3.5" />
           </Link>
         </div>
       </section>

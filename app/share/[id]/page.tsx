@@ -585,7 +585,7 @@ export default function PublicSharePage() {
                 <BarChart data={barChartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                   <XAxis dataKey="name" stroke="#64748b" fontSize={10} tickLine={false} />
                   <YAxis stroke="#64748b" fontSize={10} tickLine={false} />
-                  <ChartTooltip contentStyle={{ backgroundColor: '#0d1527', borderColor: '#1e293b', borderRadius: '8px', color: '#fff' }} />
+                  <ChartTooltip contentStyle={{ backgroundColor: '#09090b', borderColor: '#27272a', borderRadius: '8px', color: '#fff', fontSize: '10px' }} />
                   <Bar dataKey="amount" fill="#10B981" radius={[8, 8, 0, 0]}>
                     {barChartData.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={index === 1 ? '#06b6d4' : '#10B981'} />
@@ -615,7 +615,7 @@ export default function PublicSharePage() {
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
                   </Pie>
-                  <ChartTooltip contentStyle={{ backgroundColor: '#0d1527', borderColor: '#1e293b', borderRadius: '8px', color: '#fff' }} />
+                  <ChartTooltip contentStyle={{ backgroundColor: '#09090b', borderColor: '#27272a', borderRadius: '8px', color: '#fff', fontSize: '10px' }} />
                   <Legend layout="horizontal" verticalAlign="bottom" align="center" iconSize={8} wrapperStyle={{ fontSize: '9px' }} />
                 </PieChart>
               </ResponsiveContainer>

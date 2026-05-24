@@ -999,7 +999,7 @@ export default function ResultsPage() {
                   <XAxis dataKey="name" stroke="#64748b" fontSize={10} tickLine={false} />
                   <YAxis stroke="#64748b" fontSize={10} tickLine={false} />
                   <ChartTooltip 
-                    contentStyle={{ backgroundColor: '#0d1527', borderColor: '#1e293b', borderRadius: '8px', color: '#fff' }} 
+                    contentStyle={{ backgroundColor: '#09090b', borderColor: '#27272a', borderRadius: '8px', color: '#fff', fontSize: '10px' }} 
                     labelStyle={{ color: '#10b981', fontWeight: 'bold' }} 
                   />
                   <Bar dataKey="amount" fill="#10B981" radius={[8, 8, 0, 0]}>
@@ -1048,7 +1048,7 @@ export default function ResultsPage() {
                     ))}
                   </Pie>
                   <ChartTooltip 
-                    contentStyle={{ backgroundColor: '#0d1527', borderColor: '#1e293b', borderRadius: '8px', color: '#fff' }} 
+                    contentStyle={{ backgroundColor: '#09090b', borderColor: '#27272a', borderRadius: '8px', color: '#fff', fontSize: '10px' }} 
                   />
                   <Legend 
                     layout="horizontal" 
@@ -1087,7 +1087,7 @@ export default function ResultsPage() {
                   <XAxis dataKey="month" stroke="#64748b" fontSize={9} tickLine={false} />
                   <YAxis stroke="#64748b" fontSize={9} tickLine={false} />
                   <ChartTooltip 
-                    contentStyle={{ backgroundColor: '#0d1527', borderColor: '#1e293b', borderRadius: '8px', color: '#fff' }} 
+                    contentStyle={{ backgroundColor: '#09090b', borderColor: '#27272a', borderRadius: '8px', color: '#fff', fontSize: '10px' }} 
                   />
                   <Area type="monotone" dataKey="cumulativeSavings" stroke="#10b981" fillOpacity={0.1} fill="url(#colorSavings)" strokeWidth={2} />
                   <defs>
