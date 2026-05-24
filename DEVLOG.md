@@ -77,6 +77,20 @@ Daily tracking of building a production-ready, highly-optimized AI SaaS spend au
   - Learned that CSS print style configurations (`@media print`) offer far crisper, higher-resolution infinite vector PDF scaling compared to heavy and pixelated canvas-based download scripts.
 - **Blockers / what I'm stuck on:** None! The entire suite of tests passes successfully and the Turbopack production bundle compiles cleanly.
 - **Plan for tomorrow:** Partner with beta testers and launch OptiAI on Product Hunt!
+---
 
-
-
+## Day 5 — 2026-05-24
+- **Hours worked:** 6.5
+- **What I did:** Successfully implemented a premium, Stripe/Linear/Vercel-inspired SaaS Authentication Stack:
+  1. **Client-Safe Configuration Module (`lib/supabase-config.ts`):** Isolated Supabase environment configuration variables, solving Next.js App Router client-side bundling issues and resolving Turbopack compile failures when referencing Node-specific standard library functions (`fs` and `path`).
+  2. **Linear-Style Split-Screen Authentication `/login`:** Built a premium split-screen login presentation incorporating circular spend health scores, developer spend benchmarks, and a secure Google Sign-in card with mock redirect delays.
+  3. **Sticky Header Profile Dropdown:** Integrated a custom profile button and hover-open dropdown in `<Navbar />` to manage active sessions and navigate to dashboard archives.
+  4. **Relational Savings Vault `/dashboard`:** Designed a secure startup dashboard displaying cumulative metrics, calculation history lists, and consecutive run benchmarking trends over time.
+  5. **Relational User-Specific Audits API:** Refactored `app/api/audit/route.ts` API router to support `userId` parameters on calculation saves (POST) and queries (GET), enabling seamless user database associations.
+  6. **Navbar Navigation Integration:** Polished unauthenticated states to render a high-fidelity "Sign In" link in the navigation header next to "Run Free Audit", enabling easy routing to `/login`.
+  7. **Clean ESLint & Typescript Bundle:** Corrected strict linter checks and unused variables, achieving 100% linter and compilation success on both local environments and remote Vercel workflows.
+- **What I learned:**
+  - Learned that environment variables on Next.js client-side bundles are statically compiled during build time, meaning redeployments are mandatory after making configuration additions in Vercel settings.
+  - Learned that client-safe credentials checkers protect build environments from loading Node-specific dependencies in browser sandboxes.
+- **Blockers / what I'm stuck on:** still blocked in integrating good o auth verifcation for login page
+- **Plan for tomorrow:** Continue working on OAuth verification flows, test callback handlers, and coordinate the final launch.
