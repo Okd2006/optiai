@@ -90,12 +90,20 @@ export default function Navbar() {
             )}
           </div>
         ) : (
-          <Link 
-            href="/audit" 
-            className="bg-zinc-100 hover:bg-zinc-200 text-zinc-950 font-semibold text-xs px-3.5 py-1.5 rounded-lg shadow-sm hover:shadow-zinc-100/5 transition cursor-pointer"
-          >
-            Run Free Audit
-          </Link>
+          <div className="flex items-center gap-3">
+            <Link 
+              href="/login" 
+              className="text-zinc-400 hover:text-white transition text-xs font-semibold px-2 py-1.5 cursor-pointer"
+            >
+              Sign In
+            </Link>
+            <Link 
+              href="/audit" 
+              className="bg-zinc-100 hover:bg-zinc-200 text-zinc-950 font-semibold text-xs px-3.5 py-1.5 rounded-lg shadow-sm hover:shadow-zinc-100/5 transition cursor-pointer"
+            >
+              Run Free Audit
+            </Link>
+          </div>
         )}
       </div>
     </header>
