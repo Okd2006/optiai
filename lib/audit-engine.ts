@@ -564,7 +564,7 @@ export function runAudit(input: AuditInput): AuditResults {
   else if (ratio > 0.6) percentile = 28;
   else percentile = 12;
 
-  let comparisonPercentage = Math.round(Math.abs((spendPerDeveloper - industryAverage) / industryAverage) * 100);
+  const comparisonPercentage = Math.round(Math.abs((spendPerDeveloper - industryAverage) / industryAverage) * 100);
   let comparisonLabel: 'higher' | 'lower' | 'optimized' = 'optimized';
   if (spendPerDeveloper > industryAverage + 5) {
     comparisonLabel = 'higher';
