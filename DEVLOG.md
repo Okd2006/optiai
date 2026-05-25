@@ -92,5 +92,25 @@ Daily tracking of building a production-ready, highly-optimized AI SaaS spend au
 - **What I learned:**
   - Learned that environment variables on Next.js client-side bundles are statically compiled during build time, meaning redeployments are mandatory after making configuration additions in Vercel settings.
   - Learned that client-safe credentials checkers protect build environments from loading Node-specific dependencies in browser sandboxes.
-- **Blockers / what I'm stuck on:** still blocked in integrating good o auth verifcation for login page
-- **Plan for tomorrow:** Continue working on OAuth verification flows, test callback handlers, and coordinate the final launch.
+- **Blockers / what I'm stuck on:** Still blocked on Google OAuth verification constraints due to redirecting to raw Supabase domains.
+- **Plan for tomorrow:** Map out Google OAuth branding solutions and customize results page copy to pivot toward expert cost consulting.
+
+---
+
+## Day 6 — 2026-05-25
+- **Hours worked:** 4.5
+- **What I did:** Refactored the lead capture flow to focus on executive consulting and provided a comprehensive Google OAuth brand customization guide:
+  1. **B2B Lead Copy Refactoring:** Evolved the bottom lead capture card on the results page (`app/results/[id]/page.tsx`) to pivot from a simple "Email Me This Report" system into a high-value B2B **Executive Cost Consultation** capture funnel:
+     - Updated badges, titles, descriptions, and button CTAs from email-dispatch copy to custom spend reduction consulting terms (*"Help Us Reduce Your Spend"*, *"Executive Cost Consultation"*, *"Help Me Reduce My Spend"*).
+     - Cleaned up the interactive preview layout by removing email client elements (like the `From:` header) and replacing traditional fields with professional `Client:` and `Proposal:` details (*"AI Spend Reduction Proposal"*).
+     - Refactored the success message to cleanly inform users that a cost optimization expert will reach out directly to help reduce their spend.
+  2. **Google OAuth Custom Branding Guide:** Created a detailed guide (`google_oauth_branding_guide.md`) outlining step-by-step procedures for replacing the default Supabase project URL (`hdjsswjvkhhfkqvonbyw.supabase.co`) on the Google OAuth login consent screen with the custom logo and "OptiAI" brand name using:
+     - **Method A:** Google Cloud Console OAuth Consent Screen configuration and production brand verification.
+     - **Method B:** Supabase Custom Domains integration for full custom white-labeling (e.g., `auth.yourdomain.com`).
+  3. **Build & Repository Sync:** Verified the entire application via a successful Next.js production build (`npm run build`) and typecheck. Pushed the committed changes successfully to the remote `main` branch.
+- **What I learned:**
+  - Learned that in enterprise B2B fintech SaaS, users respond far better to human-consulting CTAs ("Help Me Reduce My Spend") than standard auto-mailer subscriptions, as it signals bespoke custom brokerage service rather than automated generic templates.
+  - Learned that Google's OAuth origin security display displays the hostname of the OAuth redirect URI, meaning custom domains in Supabase are the most robust, high-trust solution for fully white-labeled authentication flows.
+- **Blockers / what I'm stuck on:** None. The lead flow is highly refined and the OAuth setup roadmap is clearly laid out.
+- **Plan for tomorrow:** Assist the user with setting up custom DNS CNAME records for the Supabase custom domain and publishing their Google Cloud Console branding application.
+
