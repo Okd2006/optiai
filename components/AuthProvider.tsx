@@ -150,6 +150,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Clear local mock session
     try {
       localStorage.removeItem('optiai_session');
+      localStorage.removeItem('optiai_guest_mode');
     } catch (e) {
       console.error('Failed to clear mock session:', e);
     }

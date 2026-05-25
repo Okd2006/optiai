@@ -12,11 +12,20 @@ import {
   TrendingDown
 } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {
-  const { loginWithGoogle, user } = useAuth();
+  const { loginWithGoogle } = useAuth();
+  const router = useRouter();
   const [signingIn, setSigningIn] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const handleContinueAsGuest = () => {
+    try {
+      localStorage.setItem('optiai_guest_mode', 'true');
+    } catch (e) {}
+    router.push('/');
+  };
 
   const handleLogin = async () => {
     setSigningIn(true);
@@ -183,11 +192,11 @@ export default function LoginPage() {
             <button
               onClick={handleLogin}
               disabled={signingIn}
-              className="w-full inline-flex items-center justify-center gap-3 bg-zinc-900 border border-zinc-850 hover:border-zinc-700 text-zinc-200 hover:text-white px-4 py-3 rounded-xl text-xs font-semibold shadow-inner hover:shadow-zinc-900/40 transition cursor-pointer select-none disabled:opacity-50 disabled:cursor-not-allowed group h-[48px]"
+              className="w-full inline-flex items-center justify-center gap-3 bg-zinc-100 hover:bg-zinc-200 text-zinc-950 px-4 py-3 rounded-xl text-xs font-semibold shadow-sm transition cursor-pointer select-none disabled:opacity-50 disabled:cursor-not-allowed group h-[48px]"
             >
               {signingIn ? (
                 <>
-                  <Loader2 className="h-4 w-4 animate-spin text-zinc-400" />
+                  <Loader2 className="h-4 w-4 animate-spin text-zinc-950" />
                   <span>Securely signing in...</span>
                 </>
               ) : (
@@ -202,6 +211,13 @@ export default function LoginPage() {
                   <span>Continue with Google</span>
                 </>
               )}
+            </button>
+
+            <button
+              onClick={handleContinueAsGuest}
+              className="w-full inline-flex items-center justify-center gap-2 border border-zinc-800 hover:border-zinc-700 bg-zinc-900/20 hover:bg-zinc-900/40 text-zinc-400 hover:text-white px-4 py-3 rounded-xl text-xs font-semibold transition cursor-pointer select-none h-[48px]"
+            >
+              Continue as Guest
             </button>
           </div>
 

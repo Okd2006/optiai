@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/components/AuthProvider';
 import { 
   Layers, 
   Users, 
@@ -20,10 +22,27 @@ import {
 import { TOOL_LOGOS, OptiAiLogo } from '@/components/BrandLogos';
 
 export default function LandingPage() {
+  const { user, loading } = useAuth();
+  const router = useRouter();
+
   const [mounted, setMounted] = useState(false);
   const [dashboardOptimized, setDashboardOptimized] = useState(false);
   const [benchmarkProfile, setBenchmarkProfile] = useState<'seed' | 'saas' | 'ai-first'>('saas');
 
+  // 1. Gating/Redirect logic to login page
+  useEffect(() => {
+    if (loading) return;
+    if (!user) {
+      try {
+        const isGuest = localStorage.getItem('optiai_guest_mode') === 'true';
+        if (!isGuest) {
+          router.push('/login');
+        }
+      } catch (e) {}
+    }
+  }, [user, loading, router]);
+
+  // 2. Set mounted
   useEffect(() => {
     setMounted(true);
   }, []);

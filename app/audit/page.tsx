@@ -23,7 +23,20 @@ interface ToolFormInput {
 
 export default function AuditFormPage() {
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
+
+  // Redirect unauthenticated guest visitors to the login page first
+  useEffect(() => {
+    if (authLoading) return;
+    if (!user) {
+      try {
+        const isGuest = localStorage.getItem('optiai_guest_mode') === 'true';
+        if (!isGuest) {
+          router.push('/login');
+        }
+      } catch (e) {}
+    }
+  }, [user, authLoading, router]);
   
   // Form states
   const [teamSize, setTeamSize] = useState<number | ''>(5);
