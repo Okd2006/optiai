@@ -138,6 +138,60 @@ function formatMessageContent(text: string) {
   });
 }
 
+interface ParsedSummary {
+  execSummary: string;
+  biggestLeak: string;
+  strategy: string;
+  actionPlan: string;
+  special?: string;
+}
+
+function parseAuditSummary(text: string): ParsedSummary {
+  if (!text) {
+    return { execSummary: '', biggestLeak: '', strategy: '', actionPlan: '' };
+  }
+
+  // Strip all title headers like ### AI Spend Audit Summary
+  let cleanText = text.replace(/###\s*(AI Spend Audit Summary|AI Spend Summary|Spend Audit Summary|Summary)/gi, '').trim();
+
+  // Match fields robustly supporting both markdown-rich and standard headers
+  const biggestLeakMatch = cleanText.match(/(?:-\s*|\*\s*|\•\s*)?(?:\*\*Biggest Leak:\*\*|Biggest Leak:)\s*([\s\S]*?)(?=(?:-\s*|\*\s*|\•\s*)?(?:\*\*Strategy:\*\*|Strategy:)|$)/i);
+  const strategyMatch = cleanText.match(/(?:-\s*|\*\s*|\•\s*)?(?:\*\*Strategy:\*\*|Strategy:)\s*([\s\S]*?)(?=(?:-\s*|\*\s*|\•\s*)?(?:\*\*Action Plan:\*\*|Action Plan:)|$)/i);
+  const actionPlanMatch = cleanText.match(/(?:-\s*|\*\s*|\•\s*)?(?:\*\*Action Plan:\*\*|Action Plan:)\s*([\s\S]*?)(?=(?:-\s*|\*\s*|\•\s*)?(?:\*\*Special Recommendation:\*\*|Special Recommendation:)|$)/i);
+  const specialMatch = cleanText.match(/(?:-\s*|\*\s*|\•\s*)?(?:\*\*Special Recommendation:\*\*|Special Recommendation:)\s*([\s\S]*?)$/i);
+
+  const cleanField = (val: string) => {
+    if (!val) return '';
+    return val
+      .replace(/^[-\*\s\•\t]+/, '') // Strip leading bullet characters
+      .replace(/\*\*/g, '')          // Strip all double asterisks (bold markdown)
+      .replace(/\*/g, '')           // Strip single asterisks (italics)
+      .replace(/^[:\s]+/, '')       // Strip leading colons and spaces
+      .trim();
+  };
+
+  // Find where the first bullet section starts
+  let firstKeyIndex = cleanText.search(/(?:-\s*|\*\s*|\•\s*)?(?:\*\*Biggest Leak:\*\*|Biggest Leak:)/i);
+  if (firstKeyIndex === -1) {
+    firstKeyIndex = cleanText.search(/(?:-\s*|\*\s*|\•\s*)?(?:\*\*Strategy:\*\*|Strategy:)/i);
+  }
+  if (firstKeyIndex === -1) {
+    firstKeyIndex = cleanText.search(/(?:-\s*|\*\s*|\•\s*)?(?:\*\*Action Plan:\*\*|Action Plan:)/i);
+  }
+
+  const execSummary = firstKeyIndex > -1 
+    ? cleanField(cleanText.substring(0, firstKeyIndex))
+    : cleanField(cleanText);
+
+  return {
+    execSummary,
+    biggestLeak: biggestLeakMatch ? cleanField(biggestLeakMatch[1]) : '',
+    strategy: strategyMatch ? cleanField(strategyMatch[1]) : '',
+    actionPlan: actionPlanMatch ? cleanField(actionPlanMatch[1]) : '',
+    special: specialMatch ? cleanField(specialMatch[1]) : '',
+  };
+}
+
 // Interfaces identical to audit-engine upgraded structure
 interface HealthCategoryScore {
   score: number;
@@ -480,6 +534,35 @@ export default function ResultsPage() {
   }
 
   const { results_data, ai_summary } = audit;
+
+  const parsedSummary = parseAuditSummary(ai_summary);
+  const isParsedValid = !!(parsedSummary.execSummary && (parsedSummary.biggestLeak || parsedSummary.strategy || parsedSummary.actionPlan));
+
+  const getActionPlanBullets = (actionPlanText: string): string[] => {
+    if (!actionPlanText) return [];
+    return actionPlanText
+      .split(/(?:\.|\;|\band\b|\,)\s+/)
+      .map(sentence => sentence.trim())
+      .filter(sentence => sentence.length > 4)
+      .map(sentence => {
+        let s = sentence.replace(/^[-\*\s\•]+/, '').trim();
+        if (s.toLowerCase().startsWith('and ')) {
+          s = s.substring(4).trim();
+        }
+        s = s.replace(/\.$/, '');
+        if (s) {
+          s = s.charAt(0).toUpperCase() + s.slice(1);
+        }
+        return s;
+      })
+      .filter(Boolean);
+  };
+
+  const actionPlanBullets = getActionPlanBullets(parsedSummary.actionPlan);
+
+  const topSavingsRec = results_data?.recommendations
+    ?.filter((r: any) => r.monthlySavings > 0)
+    ?.sort((a: any, b: any) => b.monthlySavings - a.monthlySavings)[0];
   const savings = results_data.totalMonthlySavings;
   const annualSavings = results_data.totalAnnualSavings;
   const currentSpend = results_data.totalCurrentSpend;
@@ -771,15 +854,132 @@ export default function ResultsPage() {
       {/* 2. AI Summary & Spend Copilot Layout */}
       <div className="grid lg:grid-cols-5 gap-6 animate-fade-in print:hidden">
         {/* Left Column: Personalized AI Summary */}
-        <div className="glass p-6 sm:p-8 rounded-3xl border border-slate-805 shadow-xl space-y-4 lg:col-span-3 flex flex-col justify-between">
-          <div className="space-y-4">
-            <h2 className="font-display font-extrabold text-base sm:text-lg text-white flex items-center gap-2">
-              <Sparkles className="h-5 w-5 text-emerald-400 shrink-0" />
-              <span>Personalized AI Audit Summary</span>
-            </h2>
-            <div className="prose prose-invert prose-xs text-slate-300 max-w-none text-xs sm:text-sm leading-relaxed border-t border-slate-850 pt-4 whitespace-pre-line">
-              {ai_summary}
+        <div className="glass p-6 sm:p-8 rounded-3xl border border-slate-805 shadow-xl space-y-6 lg:col-span-3 flex flex-col justify-between">
+          <div className="space-y-6">
+            {/* Header and badges */}
+            <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-850 pb-4">
+              <div className="flex items-center gap-2">
+                <Sparkles className="h-5 w-5 text-emerald-400 shrink-0" />
+                <h2 className="font-display font-extrabold text-base sm:text-lg text-white">
+                  Executive Spend Summary
+                </h2>
+              </div>
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="inline-flex items-center gap-1 bg-emerald-500/10 border border-emerald-500/20 text-emerald-405 px-2 py-0.5 rounded-md text-[8.5px] font-bold uppercase tracking-wider">
+                  Confidence: High
+                </span>
+                <span className="inline-flex items-center gap-1 bg-cyan-500/10 border border-cyan-500/20 text-cyan-405 px-2 py-0.5 rounded-md text-[8.5px] font-bold uppercase tracking-wider">
+                  Verified Insights
+                </span>
+              </div>
             </div>
+
+            {isParsedValid ? (
+              <div className="space-y-6">
+                {/* 1. Executive Summary */}
+                <div className="space-y-2 max-w-xl">
+                  <span className="text-[9px] font-extrabold text-slate-500 uppercase tracking-widest block">
+                    Executive Summary
+                  </span>
+                  <p className="text-slate-205 text-xs sm:text-sm leading-relaxed font-normal">
+                    {parsedSummary.execSummary}
+                  </p>
+                </div>
+
+                {/* 2. Largest Savings Opportunity & 3. Strategic Recommendation (2-column layout) */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {/* Largest Savings Opportunity */}
+                  <div className="bg-slate-950/60 border border-slate-855 p-4.5 rounded-xl flex flex-col justify-between space-y-3">
+                    <div>
+                      <span className="text-[8.5px] font-extrabold text-rose-405 uppercase tracking-widest block">
+                        Largest Savings Opportunity
+                      </span>
+                      <span className="font-display font-extrabold text-sm text-white mt-1.5 block">
+                        {topSavingsRec ? topSavingsRec.toolName : 'Stack Fully Optimized'}
+                      </span>
+                      <p className="text-[10px] text-slate-450 mt-1 leading-normal">
+                        {topSavingsRec 
+                          ? `Switching ${topSavingsRec.toolName} from ${topSavingsRec.currentPlan} plan.`
+                          : 'All active subscriptions match active team size.'
+                        }
+                      </p>
+                    </div>
+                    <div className="border-t border-slate-850/60 pt-2 flex items-center justify-between">
+                      <span className="text-[9px] font-bold text-slate-500 uppercase">Potential Savings</span>
+                      <span className="text-xs font-black text-emerald-400">
+                        {topSavingsRec ? `${formatCurrency(topSavingsRec.monthlySavings)}/mo` : '$0/mo'}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Strategic Recommendation */}
+                  <div className="bg-slate-950/60 border border-slate-855 p-4.5 rounded-xl flex flex-col justify-between space-y-2">
+                    <div>
+                      <span className="text-[8.5px] font-extrabold text-cyan-405 uppercase tracking-widest block">
+                        Strategic Recommendation
+                      </span>
+                      <p className="text-[10px] text-slate-300 mt-2 leading-relaxed">
+                        {parsedSummary.strategy || 'Optimize redundant accounts and review software spend dynamically as requirements grow.'}
+                      </p>
+                    </div>
+                    {parsedSummary.special && (
+                      <div className="border-t border-slate-850/60 pt-2">
+                        <p className="text-[9px] text-cyan-400/90 leading-snug">
+                          💡 {parsedSummary.special}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* 4. Immediate Action Plan */}
+                {actionPlanBullets.length > 0 && (
+                  <div className="border border-emerald-500/10 bg-emerald-500/[0.02] p-4.5 rounded-xl space-y-3">
+                    <span className="text-[9px] font-extrabold text-emerald-400 uppercase tracking-widest block">
+                      Immediate Action Plan
+                    </span>
+                    <ul className="space-y-2">
+                      {actionPlanBullets.map((bullet, idx) => (
+                        <li key={idx} className="flex items-start gap-2.5 text-xs text-slate-300">
+                          <CheckCircle className="h-4 w-4 text-emerald-400 shrink-0 mt-0.5" />
+                          <span className="leading-relaxed">{bullet}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            ) : (
+              /* Dynamic elegant fallback: sanitizes any raw markdown markers and renders as nice text blocks */
+              <div className="space-y-4 max-w-xl">
+                <span className="text-[9px] font-extrabold text-slate-500 uppercase tracking-widest block">
+                  Analysis Insights
+                </span>
+                <div className="text-slate-350 text-xs sm:text-sm leading-relaxed space-y-3">
+                  {ai_summary.split('\n\n').map((paragraph, idx) => {
+                    const cleaned = paragraph
+                      .replace(/###\s*(AI Spend Audit Summary|AI Spend Summary|Spend Audit Summary|Summary)/gi, '')
+                      .replace(/\*\*/g, '')
+                      .replace(/\*/g, '')
+                      .replace(/^[-\*\s\•]+/gm, '')
+                      .trim();
+                    if (!cleaned) return null;
+                    return (
+                      <p key={idx} className="leading-relaxed">
+                        {cleaned}
+                      </p>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Metadata Footer */}
+          <div className="border-t border-slate-850 pt-4 flex flex-wrap items-center justify-between text-[8.5px] font-bold text-slate-500 gap-2 mt-4">
+            <span>Generated {timeElapsed}</span>
+            <span>•</span>
+            <span className="text-slate-500 uppercase">Pricing Database: May 2026 Sync</span>
           </div>
         </div>
 

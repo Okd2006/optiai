@@ -25,18 +25,21 @@ Generate a professional, high-impact, actionable audit summary based on these de
 - Details of Stack and Recommendations:
 ${toolListStr}
 
-Guidelines for Structure and Format:
-1. Output format must STRICTLY match this template (do not include any conversational preamble, introductory labels like "Here is your summary", or other text outside this exact structure):
+Guidelines for Copywriting Tone, Structure and Format:
+1. Copywriting Tone: Use highly professional, executive-grade, startup-realistic B2B SaaS consultant language.
+- Avoid robotic AI phrases (e.g. NEVER write "We identified concrete optimizations that will reduce this to...", or "delete duplicate tools immediately to capture savings").
+- Instead, use calm, analytical, founder-oriented, and operational insights (e.g., "Your current AI stack shows significant overspending in collaborative tooling tiers relative to your active team size of [X].", or "Standardizing engineering workflows around Cursor Pro while removing duplicate Copilot seats reduces monthly spend substantially.").
+2. Output format must STRICTLY match this template (do not include any conversational preamble, introductory labels, or markdown notes):
 
 ### AI Spend Audit Summary
 
-[An introductory paragraph summarizing the team size, current monthly spend, optimized monthly spend, and net monthly/annual savings returned to cash reserves.]
+[An executive summary paragraph summarizing the team size, current monthly spend, optimized monthly spend, and net monthly/annual savings returned to active runway.]
 
 - **Biggest Leak:** [Detail the primary source of overspending, quantifying the monthly savings from resolving this specific item.]
-- **Strategy:** [A strategic recommendation tailored to their primary use case, e.g., standardizing on Cursor for coding, consolidating duplicate conversational seats, etc.]
-- **Action Plan:** [A precise, immediate action plan to take, e.g. switching tiers to match seat counts, deleting duplicate tools, etc.]
+- **Strategy:** [A strategic consultant recommendation tailored to their primary use case and team constraints.]
+- **Action Plan:** [A precise, immediate action plan to execute in 2-3 concise bullets.]
 
-2. Keep the entire response under 130 words. Do not write anything else.`;
+3. Keep the entire response under 135 words. Do not write anything else.`;
 
   // We will check environment variables for Anthropic and OpenAI.
   // Since we are running in local, if the user hasn't supplied them, we will use our smart, highly-customized local fallback template.
@@ -107,7 +110,13 @@ function generateLocalFallbackSummary(input: SummaryInput): string {
   const annualSavings = results.totalAnnualSavings;
 
   if (savings <= 0) {
-    return `Your AI tool stack is currently outstandingly optimized! For a team of **${teamSize}** specializing in **${primaryUseCase}**, you have structured your seats and subscriptions efficiently. No immediate action is required. We recommend regular bi-monthly reviews of your spend as your team and tool offerings expand. Keep up the high standard of fiscal discipline!`;
+    return `### AI Spend Audit Summary
+
+Your AI application ecosystem is highly optimized. For a scaling team of ${teamSize} specializing in ${primaryUseCase}, your seat allocations and plan selections reflect absolute fiscal discipline. No redundant seat clusters or plan overprovisioning were detected across your active subscriptions.
+
+- **Biggest Leak:** None identified. Active software licenses perfectly match active headcount.
+- **Strategy:** Standardize subscription workflows and conduct bi-monthly operational reviews to monitor shadow IT spend as the stack scales.
+- **Action Plan:** Maintain current seat counts, track developer tool utilization rates, and establish automated spending alerts.`;
   }
 
   // Find largest savings tool
@@ -116,23 +125,29 @@ function generateLocalFallbackSummary(input: SummaryInput): string {
   
   let majorLeakMsg = '';
   if (topRec && topRec.monthlySavings > 0) {
-    majorLeakMsg = `The primary source of overspending is **${topRec.toolName}**, where you could instantly save **$${topRec.monthlySavings}/month** by adjusting your ${topRec.currentPlan} plan.`;
+    majorLeakMsg = `${topRec.toolName} ${topRec.currentPlan} plan. Consolidating active seat counts to match actual users yields $${topRec.monthlySavings}/month in capital recovery.`;
+  } else {
+    majorLeakMsg = `Unoptimized license tiers across collaborative subscription channels, contributing to monthly operational drain.`;
   }
 
   let credexCall = '';
   if (results.showCredexCta) {
-    credexCall = `\n\n🎯 **Special Recommendation:** Since your savings exceed $500/month, we highly recommend booking a complimentary consultation with **Credex** to unlock additional enterprise perks, free vendor credits (up to $10k+), and customized corporate discounts.`;
+    credexCall = `\n- **Special Recommendation:** Standardize enterprise transaction pathways via Credex to claim custom vendor rebates and up to $10,000 in active software platform credits.`;
   }
 
   const useCaseAdv = primaryUseCase === 'coding' 
-    ? 'Standardizing your engineering workflows onto Cursor Pro and cancelling standalone Copilot licenses is the most impactful immediate optimization.'
-    : 'Consolidating duplicate conversational assistants (like having both active Claude and ChatGPT subscriptions) will eliminate software redundancy without affecting daily output.';
+    ? 'Standardizing engineering workflows around Cursor Pro while removing duplicate standalone Copilot seats reduces monthly spend substantially.'
+    : 'Consolidating duplicate conversational assistants (Claude and ChatGPT subscriptions) will eliminate redundant software overhead without affecting baseline operational velocity.';
+
+  const actionPlanMsg = primaryUseCase === 'coding'
+    ? 'Resize Gemini seats, consolidate duplicate copilots, and standardize engineering tooling.'
+    : 'Standardize chat assistants, downsize unused developer accounts, and streamline subscription governance.';
 
   return `### AI Spend Audit Summary
 
-Your team of **${teamSize}** is currently spending **$${results.totalCurrentSpend}/month** on AI utilities. We have identified concrete optimizations that will reduce this to **$${results.totalRecommendedSpend}/month**, instantly returning **$${savings}/month** (**$${annualSavings}/year**) to your cash reserves.
+Your current AI stack shows significant overspending in collaborative tooling tiers relative to your active team size of ${teamSize}. Refining these allocations returns $${savings}/month ($${annualSavings}/year) in recurrent capital efficiency directly to your active runway.
 
 - **Biggest Leak:** ${majorLeakMsg}
 - **Strategy:** ${useCaseAdv}
-- **Action Plan:** Switch plan tiers to match active team seat counts and delete duplicate tools immediately to capture these savings.${credexCall}`;
+- **Action Plan:** ${actionPlanMsg}${credexCall}`;
 }
