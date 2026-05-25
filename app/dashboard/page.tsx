@@ -226,20 +226,24 @@ export default function DashboardPage() {
                 );
               })
             ) : (
-              <div className="text-center py-12 bg-zinc-900/10 border border-zinc-900 border-dashed rounded-2xl space-y-4">
-                <Sparkles className="h-8 w-8 text-zinc-700 mx-auto animate-pulse" />
-                <div className="space-y-1">
-                  <h3 className="text-xs font-bold text-zinc-400 uppercase tracking-wide">No saved calculations yet</h3>
-                  <p className="text-[10px] text-zinc-600 max-w-[220px] mx-auto leading-normal">
-                    Select your active startup stack inside our configuration engine to save your first audit runway report.
+              <div className="text-center py-12 bg-zinc-950/40 border border-zinc-900 rounded-2xl p-6 relative overflow-hidden space-y-4 hover:border-zinc-800 transition duration-200 shadow-inner">
+                <div className="absolute top-[-30%] right-[-10%] w-[150px] h-[150px] rounded-full bg-emerald-500/[0.015] blur-[40px] pointer-events-none" />
+                <Sparkles className="h-7 w-7 text-zinc-700 mx-auto animate-pulse" />
+                <div className="space-y-1.5">
+                  <h3 className="text-xs font-bold text-zinc-300 uppercase tracking-wider">No Saved Calculations</h3>
+                  <p className="text-[10.5px] text-zinc-500 max-w-[280px] mx-auto leading-relaxed">
+                    Select your active startup software subscriptions and plan tiers in the configuration engine to save your first cost reduction roadmap.
                   </p>
                 </div>
-                <Link 
-                  href="/audit" 
-                  className="inline-flex items-center justify-center bg-zinc-900 hover:bg-zinc-850 border border-zinc-850 text-zinc-400 hover:text-white font-semibold text-[10px] px-4 py-2 rounded-xl transition shadow-sm cursor-pointer"
-                >
-                  Run Your First Audit
-                </Link>
+                <div>
+                  <Link 
+                    href="/audit" 
+                    className="inline-flex items-center justify-center bg-zinc-900 hover:bg-zinc-850 border border-zinc-850 hover:border-zinc-700 text-zinc-400 hover:text-white font-semibold text-[10px] px-5 py-2.5 rounded-xl transition shadow-sm cursor-pointer"
+                  >
+                    <span>Run Your First Audit</span>
+                    <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
+                  </Link>
+                </div>
               </div>
             )}
           </div>

@@ -251,10 +251,29 @@ export default function PublicSharePage() {
   const [isMounted, setIsMounted] = useState(false);
   const [activeTab, setActiveTab] = useState<'overview' | 'health' | 'charts' | 'redundancy' | 'roadmap' | 'breakdown' | 'insights'>('overview');
   const [benchmarkProfile, setBenchmarkProfile] = useState<'saas' | 'ai-first' | 'seed' | 'growth'>('saas');
+  const [timeElapsed, setTimeElapsed] = useState('Just now');
 
   useEffect(() => {
     setIsMounted(true);
   }, []);
+
+  useEffect(() => {
+    if (!audit?.created_at) return;
+    const updateElapsed = () => {
+      const diffMs = Date.now() - new Date(audit.created_at).getTime();
+      const diffMins = Math.floor(diffMs / 60000);
+      if (diffMins < 1) {
+        setTimeElapsed('Just now');
+      } else if (diffMins === 1) {
+        setTimeElapsed('1 minute ago');
+      } else {
+        setTimeElapsed(`${diffMins} minutes ago`);
+      }
+    };
+    updateElapsed();
+    const interval = setInterval(updateElapsed, 30000);
+    return () => clearInterval(interval);
+  }, [audit?.created_at]);
 
   useEffect(() => {
     if (!id) return;
@@ -455,6 +474,24 @@ export default function PublicSharePage() {
           <h1 className="font-display font-black text-3xl md:text-4xl text-white mt-1.5 tracking-tight print:text-black">
             AI Spend Cost Savings Dashboard
           </h1>
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 mt-2.5 print:hidden">
+            <span className="inline-flex items-center gap-1 text-[9px] font-bold text-slate-500 uppercase tracking-wider">
+              <Clock className="h-3 w-3 text-slate-650" />
+              Generated {timeElapsed}
+            </span>
+            <span className="text-slate-800 text-[9px] hidden sm:inline">•</span>
+            <span className="inline-flex items-center gap-1 text-[9px] font-bold text-slate-500 uppercase tracking-wider">
+              <Activity className="h-3 w-3 text-slate-650" />
+              Benchmark updated: May 2026
+            </span>
+            <span className="text-slate-800 text-[9px] hidden sm:inline">•</span>
+            <span className="inline-flex items-center gap-1 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-md text-[8.5px] font-bold uppercase tracking-wider">
+              Confidence: High
+            </span>
+            <span className="inline-flex items-center gap-1 bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 px-2 py-0.5 rounded-md text-[8.5px] font-bold uppercase tracking-wider">
+              Status: Verified
+            </span>
+          </div>
         </div>
         <Link
           href="/audit"

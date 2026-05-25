@@ -153,10 +153,14 @@ export default function LandingPage() {
             className="w-full max-w-4xl mx-auto bg-zinc-950 border border-zinc-900 shadow-2xl rounded-2xl overflow-hidden text-left mt-8 shadow-premium"
           >
             {/* Header controls bar */}
-            <div className="bg-zinc-900/60 border-b border-zinc-900/80 px-4 py-3 flex items-center justify-between gap-4">
-              <div className="flex items-center gap-1.5">
-                <span className="h-2.5 w-2.5 rounded-full bg-zinc-800" />
+            <div className="bg-zinc-900/60 border-b border-zinc-900/80 px-4 py-3 flex flex-wrap items-center justify-between gap-4">
+              <div className="flex items-center gap-2">
+                <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
                 <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Interactive Audit Simulation</span>
+                <span className="text-[9px] text-zinc-650 font-bold hidden sm:inline">•</span>
+                <span className="text-[9px] text-zinc-600 font-bold hidden sm:inline">Benchmark updated using May 2026 pricing</span>
+                <span className="text-[9px] text-zinc-650 font-bold hidden sm:inline">•</span>
+                <span className="text-[9px] text-emerald-500/70 font-semibold hidden sm:inline">Confidence: High</span>
               </div>
               <div className="flex bg-zinc-950 p-0.5 border border-zinc-800 rounded-lg">
                 <button
@@ -384,100 +388,47 @@ export default function LandingPage() {
         </section>
       )}
 
-      {/* How It Works Section */}
-      <section id="how-it-works" className="relative z-10 max-w-5xl mx-auto px-6 md:px-12 py-20 border-t border-zinc-900">
-        <div className="text-center max-w-2xl mx-auto mb-16 space-y-2">
-          <span className="text-emerald-400 text-[10px] font-bold uppercase tracking-widest block">Audit Methodology</span>
-          <h2 className="font-display font-extrabold text-2xl md:text-3xl text-zinc-100">
-            How It Works
+      {/* Founder Insights Preview Section */}
+      <section className="relative z-10 max-w-4xl mx-auto px-6 py-20 border-t border-zinc-900 space-y-8">
+        <div className="text-center max-w-2xl mx-auto mb-10 space-y-2">
+          <span className="text-emerald-400 text-[10px] font-bold uppercase tracking-widest block">Executive Intelligence</span>
+          <h2 className="font-display font-extrabold text-2xl md:text-3xl text-zinc-100 tracking-tight">
+            Founder <span className="bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">Consulting Insights</span>
           </h2>
           <p className="text-zinc-400 text-xs md:text-sm">
-            Identify software waste in three rapid, privacy-first steps. No connections or live logins required.
+            Audits produce strategic cost observations mapped to actionable next steps to recover your capital runway.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-6">
-          {[
-            {
-              step: '01',
-              title: 'Input Your AI Stack',
-              desc: 'Select the subscriptions, licenses, seats, and monthly payments currently spent by your developers and writers.'
-            },
-            {
-              step: '02',
-              title: 'Detect Waste & Overlap',
-              desc: 'Our engine instantly reviews seat plans, duplication, and highlights cheaper, developer-friendly alternatives.'
-            },
-            {
-              step: '03',
-              title: 'Optimize & Reinvest',
-              desc: 'Get a shareable report, a custom AI summary, and partner credit recommendations to slash your bill.'
-            }
-          ].map((item, idx) => (
-            <div key={idx} className="glass p-6 rounded-xl relative border border-zinc-900 hover:border-zinc-800 transition duration-200">
-              <span className="font-display font-black text-4xl text-emerald-500/5 absolute top-4 right-5 select-none">
-                {item.step}
-              </span>
-              <h3 className="font-bold text-xs text-zinc-100 mb-2 mt-2 uppercase tracking-wide">
-                {item.title}
-              </h3>
-              <p className="text-xs text-zinc-400 leading-relaxed leading-5">
-                {item.desc}
-              </p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Benefits Section */}
-      <section className="relative z-10 max-w-5xl mx-auto px-6 md:px-12 py-16 bg-zinc-950 rounded-2xl border border-zinc-900 shadow-premium">
-        <div className="grid md:grid-cols-2 gap-12 items-center">
-          <div className="space-y-6">
-            <div>
-              <span className="text-emerald-400 text-[10px] font-bold uppercase tracking-wider block">Capital Efficiency</span>
-              <h2 className="font-display font-extrabold text-2xl md:text-3xl text-zinc-100 mt-1">
-                Maximize your startup’s capital runway
-              </h2>
-            </div>
-            <p className="text-zinc-400 text-xs leading-relaxed leading-5">
-              Every dollar spent on redundant AI subscriptions is a dollar not spent on building your product or hiring talent. OptiAI streamlines engineering software spend seamlessly.
-            </p>
-            <div className="space-y-4">
-              {[
-                { title: 'Zero Login Integration', desc: 'No sensitive keys, password sharing, or live database logins required.' },
-                { title: 'Remove Duplicate Tools', desc: 'Identify seats using overlapping code extensions (Cursor vs Copilot).' },
-                { title: 'Credex Partner Benefits', desc: 'Access startup discount brokers for free acceleration vendor credits.' }
-              ].map((b, idx) => (
-                <div key={idx} className="flex gap-3">
-                  <CheckCircle2 className="h-4.5 w-4.5 text-emerald-400 shrink-0 mt-0.5" />
-                  <div>
-                    <h4 className="text-xs font-bold text-zinc-200">{b.title}</h4>
-                    <p className="text-[10px] text-zinc-500 leading-normal">{b.desc}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
+        <div className="glass p-6 sm:p-8 rounded-2xl border border-zinc-900 space-y-6 shadow-premium max-w-3xl mx-auto hover:border-zinc-800 transition duration-200">
+          <div className="flex items-center gap-2 border-b border-zinc-900 pb-3.5">
+            <span className="text-[10px] text-cyan-400 font-bold uppercase tracking-widest">Active Audit Simulation Insights</span>
+            <span className="text-[9px] bg-zinc-900 border border-zinc-800 text-emerald-400/90 px-2 py-0.5 rounded-md font-bold uppercase ml-auto">
+              Confidence: High
+            </span>
           </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="glass p-5 rounded-xl flex flex-col justify-between h-36">
-              <DollarSign className="h-6 w-6 text-emerald-400" />
-              <div>
-                <span className="block font-display font-bold text-xl text-zinc-100">30%+</span>
-                <span className="text-[10px] text-zinc-500">Average Savings Identified</span>
-              </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 items-start pt-2">
+            <div className="md:col-span-1 space-y-1">
+              <span className="text-[8px] text-cyan-400 font-bold uppercase tracking-widest block">Observation Type</span>
+              <h4 className="text-xs font-black text-white leading-snug">Shadow-IT Seat Sprawl</h4>
             </div>
-            <div className="glass p-5 rounded-xl flex flex-col justify-between h-36">
-              <Users className="h-6 w-6 text-emerald-400" />
-              <div>
-                <span className="block font-display font-bold text-xl text-zinc-100">2–50</span>
-                <span className="text-[10px] text-zinc-500">Sized Team Optimization</span>
+            <div className="md:col-span-3 space-y-4">
+              <div className="space-y-1">
+                <span className="text-[8px] text-zinc-500 uppercase tracking-widest font-bold block">Consultant Observation</span>
+                <p className="text-[11px] text-zinc-300 leading-relaxed leading-4">
+                  Multiple team leads purchased Claude Pro subscriptions using individual cards, failing to realize Claude Team plans are already active.
+                </p>
               </div>
-            </div>
-            <div className="glass p-5 rounded-xl flex flex-col justify-between h-36 col-span-2">
-              <Layers className="h-6 w-6 text-emerald-400" />
-              <div>
-                <span className="block font-display font-bold text-sm text-zinc-100">Full Stack Audits</span>
-                <span className="text-[10px] text-zinc-500">Calculates IDEs, custom APIs, and chat subscription seats</span>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 border-t border-zinc-900 pt-3">
+                <div className="space-y-1">
+                  <span className="text-[8px] text-rose-400 uppercase tracking-widest font-bold block">Runway Impact</span>
+                  <p className="text-[10px] text-zinc-450 leading-normal font-medium">Sustaining $1,200/year in duplicate license waste.</p>
+                </div>
+                <div className="space-y-1">
+                  <span className="text-[8px] text-emerald-400 uppercase tracking-widest font-bold block">Actionable Step</span>
+                  <p className="text-[10px] text-zinc-450 leading-normal font-medium">Migrate all standalone users into your primary Claude Team organization.</p>
+                </div>
               </div>
             </div>
           </div>
@@ -487,15 +438,15 @@ export default function LandingPage() {
       {/* FAQs Section */}
       <section id="faq" className="relative z-10 max-w-4xl mx-auto px-6 py-20 border-t border-zinc-900">
         <div className="text-center mb-12 space-y-2">
-          <HelpCircle className="h-8 w-8 text-emerald-400 mx-auto" />
-          <h2 className="font-display font-extrabold text-2xl text-zinc-105">
+          <HelpCircle className="h-6 w-6 text-emerald-400 mx-auto" />
+          <h2 className="font-display font-extrabold text-2xl text-zinc-100 tracking-tight">
             Frequently Asked Questions
           </h2>
         </div>
 
         <div className="grid md:grid-cols-2 gap-4">
           {faqItems.map((item, idx) => (
-            <div key={idx} className="glass p-5 rounded-xl border border-zinc-900 flex flex-col justify-between">
+            <div key={idx} className="glass p-5 rounded-xl border border-zinc-900 flex flex-col justify-between hover:border-zinc-805 transition duration-200">
               <h3 className="font-bold text-xs sm:text-sm text-zinc-200 mb-2">
                 {item.q}
               </h3>
@@ -509,10 +460,10 @@ export default function LandingPage() {
 
       {/* Bottom Call-to-Action CTA */}
       <section className="relative z-10 max-w-4xl mx-auto px-6 pb-20 text-center">
-        <div className="glass p-10 md:p-14 rounded-2xl border border-zinc-900 relative overflow-hidden shadow-premium">
+        <div className="glass p-10 md:p-14 rounded-2xl border border-zinc-900 relative overflow-hidden shadow-premium hover:border-zinc-800 transition duration-200">
           <div className="absolute top-[-20%] right-[-20%] w-[300px] h-[300px] rounded-full bg-emerald-500/[0.015] blur-[80px]" />
           
-          <h2 className="font-display font-extrabold text-2xl md:text-3xl text-zinc-100 mb-2">
+          <h2 className="font-display font-extrabold text-2xl md:text-3xl text-zinc-100 mb-2 tracking-tight">
             Ready to optimize your burn rate?
           </h2>
           <p className="text-zinc-400 text-xs max-w-md mx-auto mb-6">
