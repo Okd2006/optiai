@@ -1540,15 +1540,15 @@ export default function ResultsPage() {
             <div className="border-b border-slate-800 pb-3">
               <span className="text-emerald-400 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5">
                 <Lock className="h-3.5 w-3.5" />
-                <span>{results_data.isWellOptimized ? 'Stay Sized Optimally' : 'Secure Inbound Report Delivery'}</span>
+                <span>{results_data.isWellOptimized ? 'Stay Sized Optimally' : 'Executive Cost Consultation'}</span>
               </span>
               <h2 className="font-display font-extrabold text-base sm:text-lg text-white mt-1">
-                {results_data.isWellOptimized ? 'Maintain Optimized Stack' : 'Email Me This Custom Audit Dashboard'}
+                {results_data.isWellOptimized ? 'Maintain Optimized Stack' : 'Help Us Reduce Your Spend'}
               </h2>
               <p className="text-xs text-slate-400 mt-1 leading-relaxed">
                 {results_data.isWellOptimized 
                   ? 'Input your email to receive automated notices when active price plan updates, licensing tiers, or alternate AI developer tools emerge.'
-                  : 'Register below to dispatch a fully formatted copy of this spend audit, interactive mock previews, and setup guides directly to your company inbox.'
+                  : 'Provide your contact details below to get a custom roadmap and expert consultation on reducing your monthly software bills.'
                 }
               </p>
             </div>
@@ -1655,7 +1655,7 @@ export default function ResultsPage() {
                     ? 'Securing Savings Database...' 
                     : results_data.isWellOptimized 
                       ? 'Secure Optimization Channel' 
-                      : 'Email Me This Spend Audit'
+                      : 'Help Me Reduce My Spend'
                   }
                   <ChevronRight className="h-4 w-4" />
                 </button>
@@ -1672,24 +1672,20 @@ export default function ResultsPage() {
                 <div className="w-2.5 h-2.5 rounded-full bg-emerald-500/80" />
               </div>
               <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">
-                Interactive Email Preview
+                Interactive Report Preview
               </span>
               <div className="w-8" />
             </div>
 
             <div className="bg-slate-900/40 px-4 py-2.5 border-b border-slate-800/80 text-[10px] space-y-1 text-slate-400 font-medium">
               <div>
-                <span className="text-slate-500 w-12 inline-block">From:</span>
-                <span className="text-slate-300 font-semibold">OptiAI &lt;audits@optiai.co&gt;</span>
-              </div>
-              <div>
-                <span className="text-slate-500 w-12 inline-block">To:</span>
+                <span className="text-slate-500 w-12 inline-block">Client:</span>
                 <span className="text-emerald-400 font-semibold">{email || 'you@company.com'}</span>
               </div>
               <div>
-                <span className="text-slate-500 w-12 inline-block">Subject:</span>
+                <span className="text-slate-500 w-12 inline-block">Proposal:</span>
                 <span className="text-slate-205 font-bold">
-                  Your AI Spend Optimization Report - {companyName || 'your Startup'}
+                  AI Spend Reduction Proposal - {companyName || 'your Startup'}
                 </span>
               </div>
             </div>
@@ -1766,7 +1762,7 @@ export default function ResultsPage() {
           <CheckCircle className="h-10 w-10 text-emerald-400 mx-auto" />
           <h3 className="font-display font-extrabold text-lg text-white">Savings Secured Successfully!</h3>
           <p className="text-xs text-slate-400 max-w-md mx-auto leading-relaxed">
-            We have registered your cost audit report. A duplicate share link and Credex broker credits guide have been generated. Check your inbox (or server developer logs) for full details!
+            We have registered your request! Our cost optimization experts will review your audit details and get in touch with you shortly at the email address provided to help reduce your spend.
           </p>
         </motion.div>
       )}
