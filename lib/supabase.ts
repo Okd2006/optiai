@@ -13,7 +13,7 @@ export interface AuditRecord {
 
 export interface LeadRecord {
   id: string;
-  audit_id: string;
+  audit_id?: string;
   email: string;
   company_name?: string;
   role?: string;

@@ -40,23 +40,29 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
           const { data: { session } } = await supabase.auth.getSession();
           if (session?.user) {
+            const email = session.user.email ?? '';
+            const name = session.user.user_metadata?.full_name ?? session.user.email?.split('@')[0] ?? 'User';
             setUser({
               id: session.user.id,
-              email: session.user.email ?? '',
-              name: session.user.user_metadata?.full_name ?? session.user.email?.split('@')[0] ?? 'User',
+              email,
+              name,
               avatarUrl: session.user.user_metadata?.avatar_url ?? 'https://api.dicebear.com/7.x/adventurer/svg?seed=OptiAI',
             });
+            syncUserAsLead(email, name);
           }
 
           // Setup listener
           const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
             if (session?.user) {
+              const email = session.user.email ?? '';
+              const name = session.user.user_metadata?.full_name ?? session.user.email?.split('@')[0] ?? 'User';
               setUser({
                 id: session.user.id,
-                email: session.user.email ?? '',
-                name: session.user.user_metadata?.full_name ?? session.user.email?.split('@')[0] ?? 'User',
+                email,
+                name,
                 avatarUrl: session.user.user_metadata?.avatar_url ?? 'https://api.dicebear.com/7.x/adventurer/svg?seed=OptiAI',
               });
+              syncUserAsLead(email, name);
             } else {
               setUser(null);
             }
@@ -74,7 +80,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       try {
         const savedSession = localStorage.getItem('optiai_session');
         if (savedSession) {
-          setUser(JSON.parse(savedSession));
+          const parsed = JSON.parse(savedSession);
+          setUser(parsed);
+          syncUserAsLead(parsed.email, parsed.name);
         }
       } catch (err) {
         console.error('Failed to load local mock session:', err);
@@ -122,6 +130,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         try {
           localStorage.setItem('optiai_session', JSON.stringify(mockProfile));
           setUser(mockProfile);
+          syncUserAsLead(mockProfile.email, mockProfile.name);
         } catch (e) {
           console.error('Failed to write mock session:', e);
         }
@@ -164,6 +173,33 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       {children}
     </AuthContext.Provider>
   );
+}
+
+async function syncUserAsLead(email: string, name: string) {
+  if (!email) return;
+  try {
+    if (typeof window === 'undefined') return;
+    const key = `optiai_lead_synced_${email}`;
+    if (localStorage.getItem(key) === 'true') return;
+
+    await fetch('/api/lead', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        email,
+        companyName: name ? `${name}'s Workspace` : 'Personal Workspace',
+        role: 'Founder',
+        teamSize: 1,
+        isLoginTrigger: true
+      })
+    });
+
+    localStorage.setItem(key, 'true');
+  } catch (e) {
+    console.warn('Failed to auto-sync logged-in user to leads database:', e);
+  }
 }
 
 export function useAuth() {

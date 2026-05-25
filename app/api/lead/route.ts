@@ -57,12 +57,28 @@ function parseMarkdownToEmailHtml(markdown: string): string {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { auditId, email, companyName, role, teamSize, honeypot } = body;
+    const { auditId, email, companyName, role, teamSize, honeypot, isLoginTrigger } = body;
 
     // Honeypot detection - if field is populated, silently return success to prevent crawler alerts
     if (honeypot) {
       console.warn('Honeypot triggered! Spam lead ignored silently.');
       return NextResponse.json({ success: true, message: 'Lead recorded.' }, { status: 201 });
+    }
+
+    if (isLoginTrigger) {
+      if (!email) {
+        return NextResponse.json({ error: 'Missing email.' }, { status: 400 });
+      }
+
+      // Save lead to database (with automatic in-memory fallback)
+      const saved = await saveLead({
+        email,
+        company_name: companyName,
+        role,
+        team_size: teamSize ? parseInt(teamSize, 10) : undefined
+      });
+
+      return NextResponse.json({ success: true, lead: saved }, { status: 201 });
     }
 
     if (!auditId || !email) {
