@@ -31,7 +31,6 @@ export default function Navbar() {
         </span>
       </Link>
       <nav className="hidden sm:flex items-center gap-8 text-xs font-semibold text-zinc-400">
-        <Link href="/#features" className="hover:text-white transition">Features</Link>
         <Link href="/#how-it-works" className="hover:text-white transition">How It Works</Link>
         <Link href="/#faq" className="hover:text-white transition">FAQ</Link>
       </nav>

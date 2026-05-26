@@ -136,12 +136,6 @@ export default function LandingPage() {
             <span>Run Free Audit</span>
             <ArrowRight className="h-3.5 w-3.5" />
           </Link>
-          <a 
-            href="#how-it-works" 
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 border border-zinc-800 hover:border-zinc-700 bg-zinc-900/30 hover:bg-zinc-900/60 px-6 py-3 rounded-lg text-zinc-300 hover:text-white transition font-semibold text-xs"
-          >
-            See Methodology
-          </a>
         </motion.div>
 
         {/* Dynamic Hydrated Interactive Dashboard Preview (FEATURE 1) */}
