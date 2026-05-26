@@ -4,7 +4,7 @@ This document defines the North Star metric, key input variables, event tracking
 
 ---
 
-## 🌟 The North Star Metric
+## The North Star Metric
 
 ### **Total Monthly Spend Savings Identified (TMSSI)**
 *Definition*: The cumulative sum of all monthly savings computed and delivered to founders through completed audits.
@@ -16,7 +16,7 @@ This document defines the North Star metric, key input variables, event tracking
 
 ---
 
-## 📊 Key Input Metrics (Friction Funnel)
+## Key Input Metrics (Friction Funnel)
 
 To grow our North Star, we optimize three critical input variables:
 
@@ -40,7 +40,7 @@ To grow our North Star, we optimize three critical input variables:
 
 ---
 
-## 🔌 Instrumentation Event Schema
+## Instrumentation Event Schema
 
 We instrument tracking using a standard event broker (like PostHog or Segment) embedded in our React client components:
 
@@ -74,7 +74,7 @@ We instrument tracking using a standard event broker (like PostHog or Segment) e
 
 ---
 
-## 🎯 Strategic Business Pivot Trigger
+## Strategic Business Pivot Trigger
 
 As a B2B SaaS lead broker, we maintain a strict **Pivot Threshold** to ensure business model viability:
 

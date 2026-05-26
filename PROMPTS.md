@@ -4,7 +4,7 @@ This document indexes our prompt architecture, prompt engineering rationale, fai
 
 ---
 
-## 🎯 Production System Prompt
+## Production System Prompt
 
 Our current active server-side prompt utilized in `/lib/ai-summary.ts` to instruct the Claude / GPT model is structured as follows:
 
@@ -30,7 +30,7 @@ Guidelines:
 
 ---
 
-## 💡 Prompt Engineering Rationale
+## Prompt Engineering Rationale
 
 1. **Quantifiable Metrics First**: Founders respond to concrete numbers. By forcing the LLM to quantify the exact monthly and annual savings, we build instant credibility.
 2. **Actionable Priority Ordering**: Instructing the model to summarize the largest waste factor first ensures that the user is immediately gripped by the most impactful item (e.g. redundant IDE extensions or Claude Team seat padding).
@@ -39,59 +39,59 @@ Guidelines:
 
 ---
 
-## ❌ Failed Iterations & Lessons Learned
+## Failed Iterations & Lessons Learned
 
 ### Iteration 1: Over-generalized chat structure
 - **Format:**
-  `"Summarize these audit calculations: {results}. Provide saving advice."`
+`"Summarize these audit calculations: {results}. Provide saving advice."`
 - **Result:**
-  The LLM output was highly conversational ("Hello there! I reviewed your spending..."), lacked formatting structure, exceeded 300 words, and failed to output exact savings figures. It often recommended arbitrary generic software instead of our official supported stack.
+The LLM output was highly conversational ("Hello there! I reviewed your spending..."), lacked formatting structure, exceeded 300 words, and failed to output exact savings figures. It often recommended arbitrary generic software instead of our official supported stack.
 - **Lesson:**
-  An LLM must be explicitly constrained using role definitions, specific text guidelines, bullet restrictions, and strict length bounds.
+An LLM must be explicitly constrained using role definitions, specific text guidelines, bullet restrictions, and strict length bounds.
 
 ### Iteration 2: HTML Output Attempt
 - **Format:**
-  `"Write a 100-word audit summary in clean HTML code containing <div> and <span> tags."`
+`"Write a 100-word audit summary in clean HTML code containing <div> and <span> tags."`
 - **Result:**
-  The LLM generated incomplete HTML when running low on tokens, leading to broken layout structures on the dashboard results page. Furthermore, escaping and rendering raw HTML safely on React clients introduced XSS vulnerabilities.
+The LLM generated incomplete HTML when running low on tokens, leading to broken layout structures on the dashboard results page. Furthermore, escaping and rendering raw HTML safely on React clients introduced XSS vulnerabilities.
 - **Lesson:**
-  Standard Markdown format is significantly safer, highly readable, and parses natively into standard CSS layout components.
+Standard Markdown format is significantly safer, highly readable, and parses natively into standard CSS layout components.
 
 ---
 
-## 🛡️ Robust Template Fallback Structure
+## Robust Template Fallback Structure
 
 If API invocations fail, we instantly compile a highly-customized, template-based summary:
 
 ```typescript
 function generateLocalFallbackSummary(input: SummaryInput): string {
-  const { results, teamSize, primaryUseCase } = input;
-  const savings = results.totalMonthlySavings;
-  const annualSavings = results.totalAnnualSavings;
+const { results, teamSize, primaryUseCase } = input;
+const savings = results.totalMonthlySavings;
+const annualSavings = results.totalAnnualSavings;
 
-  if (savings <= 0) {
-    return `Your AI tool stack is currently outstandingly optimized! For a team of **${teamSize}** specializing in **${primaryUseCase}**, you have structured your seats and subscriptions efficiently. No immediate action is required. We recommend regular bi-monthly reviews of your spend as your team and tool offerings expand. Keep up the high standard of fiscal discipline!`;
-  }
+if (savings <= 0) {
+return `Your AI tool stack is currently outstandingly optimized! For a team of **${teamSize}** specializing in **${primaryUseCase}**, you have structured your seats and subscriptions efficiently. No immediate action is required. We recommend regular bi-monthly reviews of your spend as your team and tool offerings expand. Keep up the high standard of fiscal discipline!`;
+}
 
-  // Find largest savings tool
-  const sortedRecs = [...results.recommendations].sort((a, b) => b.monthlySavings - a.monthlySavings);
-  const topRec = sortedRecs[0];
-  
-  let majorLeakMsg = '';
-  if (topRec && topRec.monthlySavings > 0) {
-    majorLeakMsg = `The primary source of overspending is **${topRec.toolName}**, where you could instantly save **$${topRec.monthlySavings}/month** by adjusting your ${topRec.currentPlan} plan.`;
-  }
+// Find largest savings tool
+const sortedRecs = [...results.recommendations].sort((a, b) => b.monthlySavings - a.monthlySavings);
+const topRec = sortedRecs[0];
 
-  let credexCall = '';
-  if (results.showCredexCta) {
-    credexCall = `\n\n🎯 **Special Recommendation:** Since your savings exceed $500/month, we highly recommend booking a complimentary consultation with **Credex** to unlock additional enterprise perks, free vendor credits (up to $10k+), and customized corporate discounts.`;
-  }
+let majorLeakMsg = '';
+if (topRec && topRec.monthlySavings > 0) {
+majorLeakMsg = `The primary source of overspending is **${topRec.toolName}**, where you could instantly save **$${topRec.monthlySavings}/month** by adjusting your ${topRec.currentPlan} plan.`;
+}
 
-  const useCaseAdv = primaryUseCase === 'coding' 
-    ? 'Standardizing your engineering workflows onto Cursor Pro and cancelling standalone Copilot licenses is the most impactful immediate optimization.'
-    : 'Consolidating duplicate conversational assistants (like having both active Claude and ChatGPT subscriptions) will eliminate software redundancy without affecting daily output.';
+let credexCall = '';
+if (results.showCredexCta) {
+credexCall = `\n\n **Special Recommendation:** Since your savings exceed $500/month, we highly recommend booking a complimentary consultation with **Credex** to unlock additional enterprise perks, free vendor credits (up to $10k+), and customized corporate discounts.`;
+}
 
-  return `### AI Spend Audit Summary
+const useCaseAdv = primaryUseCase === 'coding' 
+? 'Standardizing your engineering workflows onto Cursor Pro and cancelling standalone Copilot licenses is the most impactful immediate optimization.'
+: 'Consolidating duplicate conversational assistants (like having both active Claude and ChatGPT subscriptions) will eliminate software redundancy without affecting daily output.';
+
+return `### AI Spend Audit Summary
 
 Your team of **${teamSize}** is currently spending **$${results.totalCurrentSpend}/month** on AI utilities. We have identified concrete optimizations that will reduce this to **$${results.totalRecommendedSpend}/month**, instantly returning **$${savings}/month** (**$${annualSavings}/year**) to your cash reserves.
 

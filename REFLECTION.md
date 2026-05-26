@@ -53,13 +53,13 @@ To effectively measure the growth of OptiAI, we must establish a clear hierarchy
 I would design a unified analytics dashboard (using an event broker like **Mixpanel** or **PostHog**) to measure three core funnels:
 
 1. **Acquisition & Audit Volume**:
-   - *Active Audits Run*: Total number of completed forms per day.
-   - *Average Savings Per Audit*: Helps determine if we are attracting the right high-spend startup profiles.
+- *Active Audits Run*: Total number of completed forms per day.
+- *Average Savings Per Audit*: Helps determine if we are attracting the right high-spend startup profiles.
 2. **Engagement & Sharing (Viral Loop)**:
-   - *Public Share Rate*: Percentage of users who click "Copy Share Link" or copy results.
-   - *Referral Traffic*: Visitors landing on `/share/[id]` pages who subsequently click "Run Free Audit" to begin their own flows.
+- *Public Share Rate*: Percentage of users who click "Copy Share Link" or copy results.
+- *Referral Traffic*: Visitors landing on `/share/[id]` pages who subsequently click "Run Free Audit" to begin their own flows.
 3. **Monetization & Conversion**:
-   - *Lead Registration Rate*: Percentage of audit runners who complete the contact form to save their report.
-   - *Credex CTA Click-Through Rate (CTR)*: The conversion of qualified high-savings users into booked credit consultations.
+- *Lead Registration Rate*: Percentage of audit runners who complete the contact form to save their report.
+- *Credex CTA Click-Through Rate (CTR)*: The conversion of qualified high-savings users into booked credit consultations.
 
 By monitoring these variables, we can perform targeted A/B tests on landing hero copy, modify pricing calculations rules dynamically, and iterate on CTA placement, maximizing both startup capital efficiency and lead routing revenue.

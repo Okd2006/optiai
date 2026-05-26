@@ -4,31 +4,31 @@ OptiAI is engineered with a modular, highly resilient, and responsive architectu
 
 ---
 
-## 🗺️ System Data Flow Diagram
+## System Data Flow Diagram
 
 The diagram below maps how form inputs transit from the browser client, through backend processors, and persist to database nodes.
 
 ```mermaid
 graph TD
-    Client[Next.js Client: /audit] -- 1. Submit Form JSON --> ApiAudit[API Route: POST /api/audit]
-    ApiAudit -- 2. Calc Engine --> AuditEngine[Audit Engine Logic: runAudit]
-    ApiAudit -- 3. Trigger Prompt --> AISummary[AI Summary Generator]
-    AISummary -- 4. Fetch Response --> LLM[Anthropic Sonnet / OpenAI API]
-    AISummary -.->|Fallback| MockTemplates[Localized Summary Fallback]
-    ApiAudit -- 5. Write Record --> Database[Supabase PG / In-Memory DB]
-    Database -- 6. Return Saved Record --> ApiAudit
-    ApiAudit -- 7. HTTP 201 + ID --> Client
-    Client -- 8. Redirect --> Results[Client Dashboard: /results/uuid]
-    
-    Results -- 9. Submit Email --> ApiLead[API Route: POST /api/lead]
-    ApiLead -- 10. Spam Protection --> Honeypot[Honeypot Rate Limiter]
-    Honeypot -- 11. Record Contact --> Database
-    Honeypot -- 12. Dispatch Job --> Resend[Resend Email Gateway]
+Client[Next.js Client: /audit] -- 1. Submit Form JSON --> ApiAudit[API Route: POST /api/audit]
+ApiAudit -- 2. Calc Engine --> AuditEngine[Audit Engine Logic: runAudit]
+ApiAudit -- 3. Trigger Prompt --> AISummary[AI Summary Generator]
+AISummary -- 4. Fetch Response --> LLM[Anthropic Sonnet / OpenAI API]
+AISummary -.->|Fallback| MockTemplates[Localized Summary Fallback]
+ApiAudit -- 5. Write Record --> Database[Supabase PG / In-Memory DB]
+Database -- 6. Return Saved Record --> ApiAudit
+ApiAudit -- 7. HTTP 201 + ID --> Client
+Client -- 8. Redirect --> Results[Client Dashboard: /results/uuid]
+
+Results -- 9. Submit Email --> ApiLead[API Route: POST /api/lead]
+ApiLead -- 10. Spam Protection --> Honeypot[Honeypot Rate Limiter]
+Honeypot -- 11. Record Contact --> Database
+Honeypot -- 12. Dispatch Job --> Resend[Resend Email Gateway]
 ```
 
 ---
 
-## 💾 Database Schema Details
+## Database Schema Details
 
 We maintain two primary relational tables in Supabase (PostgreSQL) linked via UUID foreign keys:
 
@@ -54,22 +54,22 @@ Tracks contact records linked to cost savings reports.
 
 ---
 
-## ⚡ Stack Rationale
+## Stack Rationale
 
 1. **Next.js 15 App Router & Server Components**:
-   - Allows us to combine highly interactive frontend forms with fast Server API endpoints in a single, standard repository.
+- Allows us to combine highly interactive frontend forms with fast Server API endpoints in a single, standard repository.
 2. **TypeScript**:
-   - Guarantees complete type safety across form schemas, pricing databases, and audit results parameters.
+- Guarantees complete type safety across form schemas, pricing databases, and audit results parameters.
 3. **Tailwind CSS v4 & Lucide Icons**:
-   - Ensures an extremely polished, high-performance UI using native CSS themes. Completely removes heavy JavaScript-in-CSS dependencies.
+- Ensures an extremely polished, high-performance UI using native CSS themes. Completely removes heavy JavaScript-in-CSS dependencies.
 4. **Supabase (PostgreSQL)**:
-   - Provides instantaneous REST APIs and a hosted PostgreSQL database without maintaining dedicated backend instances.
+- Provides instantaneous REST APIs and a hosted PostgreSQL database without maintaining dedicated backend instances.
 5. **Vitest**:
-   - Offers lightning-fast test execution speeds, running our suite in under 20ms.
+- Offers lightning-fast test execution speeds, running our suite in under 20ms.
 
 ---
 
-## 📈 Scaling Plan: Handling 10,000 Audits / Day
+## Scaling Plan: Handling 10,000 Audits / Day
 
 To support high-volume viral traffic (e.g. launching on Product Hunt or getting shared on Hacker News) exceeding **10,000 audits per day** (average of ~7 requests/minute, peaking at 100/minute), we will deploy the following scaling mitigations:
 

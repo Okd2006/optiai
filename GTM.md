@@ -4,7 +4,7 @@ OptiAI is uniquely positioned as a high-conversion lead generation tool for B2B 
 
 ---
 
-## 🎯 Target Demographics & Persona Focus
+## Target Demographics & Persona Focus
 
 Our acquisition is centered around three primary startup roles operating at teams sized 2 to 50 employees, currently spending $200 to $10,000+ monthly on AI tools:
 
@@ -14,7 +14,7 @@ Our acquisition is centered around three primary startup roles operating at team
 
 ---
 
-## 🚀 Key Acquisition Channels
+## Key Acquisition Channels
 
 We will drive initial velocity using a four-pronged inbound and partnership strategy:
 
@@ -35,15 +35,15 @@ We will scrape public engineering hiring posts. If a startup is hiring for "Reac
 
 ---
 
-## 🔄 Viral Optimization Loop
+## Viral Optimization Loop
 
 We incentivize conversion using a highly visual, frictionless dashboard:
 ```
 [Founder lands on OptiAI] 
-   └───► [Enters stack anonymously (0 friction)] 
-           └───► [Sees concrete savings chart + AI Summary] 
-                   └───► [Prompts to Save Report via Email (Captures Lead)]
-                           └───► [CTO shares anonymous /share URL with Team/Investors]
-                                   └───► [New Founders click "Run My Audit" on shared link]
+└───► [Enters stack anonymously (0 friction)] 
+└───► [Sees concrete savings chart + AI Summary] 
+└───► [Prompts to Save Report via Email (Captures Lead)]
+└───► [CTO shares anonymous /share URL with Team/Investors]
+└───► [New Founders click "Run My Audit" on shared link]
 ```
 This loop ensures that every successful lead generated has the potential to refer multiple secondary leads naturally, decreasing our Customer Acquisition Cost (CAC) to near-zero.
