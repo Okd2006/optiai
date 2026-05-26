@@ -152,7 +152,7 @@ function parseAuditSummary(text: string): ParsedSummary {
   }
 
   // Strip all title headers like ### AI Spend Audit Summary
-  let cleanText = text.replace(/###\s*(AI Spend Audit Summary|AI Spend Summary|Spend Audit Summary|Summary)/gi, '').trim();
+  const cleanText = text.replace(/###\s*(AI Spend Audit Summary|AI Spend Summary|Spend Audit Summary|Summary)/gi, '').trim();
 
   // Match fields robustly supporting both markdown-rich and standard headers
   const biggestLeakMatch = cleanText.match(/(?:-\s*|\*\s*|\•\s*)?(?:\*\*Biggest Leak:\*\*|Biggest Leak:)\s*([\s\S]*?)(?=(?:-\s*|\*\s*|\•\s*)?(?:\*\*Strategy:\*\*|Strategy:)|$)/i);
@@ -572,8 +572,8 @@ export default function ResultsPage() {
   const actionPlanBullets = getActionPlanBullets(parsedSummary.actionPlan);
 
   const topSavingsRec = results_data?.recommendations
-    ?.filter((r: any) => r.monthlySavings > 0)
-    ?.sort((a: any, b: any) => b.monthlySavings - a.monthlySavings)[0];
+    ?.filter((r: RecommendationExtended) => r.monthlySavings > 0)
+    ?.sort((a: RecommendationExtended, b: RecommendationExtended) => b.monthlySavings - a.monthlySavings)[0];
   const savings = results_data.totalMonthlySavings;
   const annualSavings = results_data.totalAnnualSavings;
   const currentSpend = results_data.totalCurrentSpend;

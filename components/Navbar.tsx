@@ -41,6 +41,7 @@ export default function Navbar() {
               onClick={() => setDropdownOpen(!dropdownOpen)}
               className="flex items-center gap-1.5 p-1 rounded-xl hover:bg-zinc-900 border border-transparent hover:border-zinc-800 transition cursor-pointer select-none"
             >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img 
                 src={user.avatarUrl} 
                 alt={user.name} 

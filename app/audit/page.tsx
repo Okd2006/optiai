@@ -378,7 +378,7 @@ export default function AuditFormPage() {
               </label>
               <CustomSelect
                 value={primaryUseCase}
-                onChange={(val) => setPrimaryUseCase(val as any)}
+                onChange={(val) => setPrimaryUseCase(val as 'coding' | 'writing' | 'research' | 'data' | 'mixed')}
                 options={[
                   { value: 'coding', label: 'Software Development / Coding' },
                   { value: 'writing', label: 'Content Writing / Copywriting' },
