@@ -408,6 +408,12 @@ export default function ResultsPage() {
     fetchAudit();
   }, [id]);
 
+  useEffect(() => {
+    if (audit) {
+      window.scrollTo(0, 0);
+    }
+  }, [audit]);
+
   const handleSendMessage = async (textToSend?: string) => {
     const messageText = textToSend || chatInput;
     if (!messageText.trim() || chatLoading) return;
