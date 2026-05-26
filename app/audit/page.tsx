@@ -4,15 +4,96 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { PRICING_DATA } from '@/lib/pricing-data';
 import { TOOL_LOGOS, OptiAiLogo } from '@/components/BrandLogos';
+import { useRef } from 'react';
 import { 
   Trash2, 
   ArrowRight, 
   Sparkles, 
   Loader2, 
   AlertCircle,
-  HelpCircle
+  HelpCircle,
+  ChevronDown,
+  Check
 } from 'lucide-react';
 import { useAuth } from '@/components/AuthProvider';
+
+interface SelectOption {
+  value: string;
+  label: string;
+}
+
+interface CustomSelectProps {
+  value: string;
+  onChange: (value: string) => void;
+  options: SelectOption[];
+  className?: string;
+  disabled?: boolean;
+}
+
+function CustomSelect({ value, onChange, options, className = '', disabled = false }: CustomSelectProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const selectedOption = options.find((opt) => opt.value === value) || options[0];
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  const handleSelect = (val: string) => {
+    onChange(val);
+    setIsOpen(false);
+  };
+
+  return (
+    <div ref={containerRef} className={`relative w-full ${className}`}>
+      <button
+        type="button"
+        disabled={disabled}
+        onClick={() => setIsOpen(!isOpen)}
+        className={`w-full flex items-center justify-between bg-zinc-950 border border-zinc-900 focus:border-emerald-500/80 focus:ring-1 focus:ring-emerald-500/10 text-zinc-200 px-3.5 rounded-xl text-xs transition duration-200 outline-none cursor-pointer hover:border-zinc-800 font-semibold disabled:opacity-50 disabled:cursor-not-allowed select-none h-[50px] text-left ${
+          isOpen ? 'border-emerald-500/80 ring-1 ring-emerald-500/10' : ''
+        }`}
+      >
+        <span className="truncate">{selectedOption?.label || value}</span>
+        <ChevronDown className={`h-4 w-4 text-zinc-500 transition-transform duration-200 shrink-0 ${isOpen ? 'rotate-185 text-emerald-450' : ''}`} />
+      </button>
+
+      {isOpen && (
+        <div className="absolute left-0 mt-1.5 w-full bg-zinc-950 border border-zinc-850 rounded-xl shadow-2xl z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-150 ease-out max-h-60 overflow-y-auto scrollbar-thin scrollbar-thumb-zinc-800 scrollbar-track-transparent">
+          <div className="p-1.5 space-y-0.5">
+            {options.map((option) => {
+              const isSelected = option.value === value;
+              return (
+                <button
+                  key={option.value}
+                  type="button"
+                  onClick={() => handleSelect(option.value)}
+                  className={`w-full flex items-center justify-between text-left px-3 py-2.5 rounded-lg text-xs transition select-none cursor-pointer font-medium ${
+                    isSelected
+                      ? 'bg-emerald-500/10 text-emerald-400 font-bold border border-emerald-500/20'
+                      : 'text-zinc-350 hover:bg-zinc-900 hover:text-white'
+                  }`}
+                >
+                  <span className="truncate">{option.label}</span>
+                  {isSelected && <Check className="h-3.5 w-3.5 text-emerald-400 shrink-0 ml-2" />}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
 
 interface ToolFormInput {
   toolId: string;
@@ -286,27 +367,26 @@ export default function AuditFormPage() {
                 max="1000"
                 value={teamSize}
                 onChange={(e) => setTeamSize(e.target.value === '' ? '' : parseInt(e.target.value, 10))}
-                className="w-full bg-zinc-900/30 border border-zinc-850 hover:border-zinc-700 focus:border-emerald-500/80 focus:ring-1 focus:ring-emerald-500/10 text-zinc-200 py-3 px-4 rounded-xl text-xs transition outline-none font-medium"
+                className="w-full bg-zinc-900/30 border border-zinc-850 hover:border-zinc-700 focus:border-emerald-500/80 focus:ring-1 focus:ring-emerald-500/10 text-zinc-200 px-4 rounded-xl text-xs transition duration-200 outline-none font-medium h-[50px]"
                 required
               />
             </div>
 
             <div>
-              <label htmlFor="use-case" className="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-2">
+              <label className="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-2">
                 Primary AI Use Case
               </label>
-              <select
-                id="use-case"
+              <CustomSelect
                 value={primaryUseCase}
-                onChange={(e) => setPrimaryUseCase(e.target.value as 'coding' | 'writing' | 'research' | 'data' | 'mixed')}
-                className="w-full bg-zinc-900/30 border border-zinc-850 hover:border-zinc-700 focus:border-emerald-500/80 focus:ring-1 focus:ring-emerald-500/10 text-zinc-200 py-3 px-4 rounded-xl text-xs transition outline-none font-medium cursor-pointer"
-              >
-                <option value="coding">Software Development / Coding</option>
-                <option value="writing">Content Writing / Copywriting</option>
-                <option value="research">Academic / Market Research</option>
-                <option value="data">Data Analysis & Modeling</option>
-                <option value="mixed">Mixed Daily Operations</option>
-              </select>
+                onChange={(val) => setPrimaryUseCase(val as any)}
+                options={[
+                  { value: 'coding', label: 'Software Development / Coding' },
+                  { value: 'writing', label: 'Content Writing / Copywriting' },
+                  { value: 'research', label: 'Academic / Market Research' },
+                  { value: 'data', label: 'Data Analysis & Modeling' },
+                  { value: 'mixed', label: 'Mixed Daily Operations' }
+                ]}
+              />
             </div>
           </div>
         </div>
@@ -407,15 +487,11 @@ export default function AuditFormPage() {
                       <label className="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">
                         Plan / Tier
                       </label>
-                      <select
+                      <CustomSelect
                         value={tool.planName}
-                        onChange={(e) => handlePlanChange(idx, e.target.value)}
-                        className="w-full bg-zinc-950 border border-zinc-900 text-zinc-200 px-3.5 rounded-xl text-xs transition outline-none cursor-pointer hover:border-zinc-850 font-semibold h-[50px] py-0"
-                      >
-                        {currentPricing?.plans.map((p) => (
-                          <option key={p.name} value={p.name}>{p.name}</option>
-                        ))}
-                      </select>
+                        onChange={(val) => handlePlanChange(idx, val)}
+                        options={currentPricing?.plans.map((p) => ({ value: p.name, label: p.name })) || []}
+                      />
                     </div>
 
                     {/* Seats Count */}
@@ -429,7 +505,7 @@ export default function AuditFormPage() {
                         max="500"
                         value={tool.seats}
                         onChange={(e) => handleSeatsChange(idx, e.target.value === '' ? '' : parseInt(e.target.value, 10))}
-                        className="w-full bg-zinc-950 border border-zinc-900 text-zinc-200 px-3.5 rounded-xl text-xs transition outline-none focus:border-emerald-500/80 focus:ring-1 focus:ring-emerald-500/10 font-semibold disabled:opacity-50 disabled:cursor-not-allowed h-[50px] py-0"
+                        className="w-full bg-zinc-950 border border-zinc-900 text-zinc-200 px-3.5 rounded-xl text-xs transition duration-200 outline-none focus:border-emerald-500/80 focus:ring-1 focus:ring-emerald-500/10 font-semibold disabled:opacity-50 disabled:cursor-not-allowed h-[50px] py-0"
                         disabled={isUsageType} // API tools don't have static user seats
                       />
                     </div>
@@ -450,7 +526,7 @@ export default function AuditFormPage() {
                         max="100000"
                         value={tool.monthlySpend}
                         onChange={(e) => handleSpendChange(idx, e.target.value === '' ? '' : parseFloat(e.target.value))}
-                        className="w-full bg-zinc-950 border border-zinc-900 text-zinc-200 px-3.5 rounded-xl text-xs transition outline-none focus:border-emerald-500/80 focus:ring-1 focus:ring-emerald-500/10 font-semibold h-[50px] py-0"
+                        className="w-full bg-zinc-950 border border-zinc-900 text-zinc-200 px-3.5 rounded-xl text-xs transition duration-200 outline-none focus:border-emerald-500/80 focus:ring-1 focus:ring-emerald-500/10 font-semibold h-[50px] py-0"
                       />
                     </div>
                   </div>

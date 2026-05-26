@@ -1876,7 +1876,7 @@ export default function ResultsPage() {
                       value={leadTeamSize}
                       onChange={(e) => setLeadTeamSize(e.target.value)}
                       placeholder="e.g. 5"
-                      className="w-full bg-slate-950 border border-slate-800 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 text-slate-200 py-3 pl-10 pr-4 rounded-xl text-xs transition outline-none font-medium"
+                      className="w-full bg-slate-950 border border-slate-800 focus:border-emerald-500/80 focus:ring-1 focus:ring-emerald-500/10 text-slate-200 py-3.5 pl-10 pr-4 rounded-xl text-xs transition duration-200 outline-none font-medium"
                     />
                   </div>
                 </div>
