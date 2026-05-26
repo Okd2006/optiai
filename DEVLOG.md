@@ -128,9 +128,15 @@ Daily tracking of building a production-ready, highly-optimized AI SaaS spend au
      - Renders immediate Action Plans as a styled list utilizing neon-green checkmark SVGs.
      - Adds absolute-positioned Relative Timestamps and Pricing Freshness badges.
   5. **100% Green Vitest & Build Checks:** Verified that all Vitest unit tests pass and Turbopack builds dynamically without any regressions.
+  6. **Custom Premium Form Controls:** Replaced default browser-native dropdown menus with lightweight custom React `<CustomSelect>` dropdowns featuring check vectors, smooth animations, and click-outside close handlers. Styled all text/number inputs to identical 50px heights.
+  7. **Global Spin Buttons Reset:** Suppressed browser-native numeric up/down spinners globally inside `app/globals.css` using Webkit and Mozilla css resets.
+  8. **z-Index Stacking Context Corrections:** Resolved a visual overlap issue where expanded select option list menus loaded behind adjacent card blocks:
+     - Applied relative stacking contexts and layered z-indexes to top sibling section cards (`z-30` for Startup Environment, `z-20` for Stack Selector, `z-10` for configurations).
+     - Applied index-based relative sorting `style={{ zIndex: tools.length - idx }}` to configurations cards so upper rows cleanly float on top of lower row elements.
+     - Elevated expanded select wrapper containers dynamically to `z-50` when open.
 - **What I learned:**
   - Learned that parsing LLM text responses into structured React UI objects yields a significantly higher level of trust and luxury visual design than rendering generic markdown blocks.
   - Learned that dynamically checking active recommendations database lists to identify the highest savings opportunity card creates a solid, error-free, and realistic SaaS reporting experience.
-- **Blockers / what I'm stuck on:** None. The summary section feels like a premium B2B consultant audit report.
+  - Learned that in relative flex stacks, later DOM sibling nodes naturally overlay earlier sibling nodes unless explicitly assigned explicit descending z-indexes, which are critical when rendering custom dropdown floaters.
+- **Blockers / what I'm stuck on:** None. The entire form environment is launch-ready and visually flawless.
 - **Plan for tomorrow:** Partner with founders to deploy the production build.
-

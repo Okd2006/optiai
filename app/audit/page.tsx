@@ -54,7 +54,7 @@ function CustomSelect({ value, onChange, options, className = '', disabled = fal
   };
 
   return (
-    <div ref={containerRef} className={`relative w-full ${className}`}>
+    <div ref={containerRef} className={`relative w-full ${isOpen ? 'z-50' : 'z-10'} ${className}`}>
       <button
         type="button"
         disabled={disabled}
@@ -350,7 +350,7 @@ export default function AuditFormPage() {
         )}
 
         {/* General Stack Information Card */}
-        <div className="glass p-6 sm:p-8 rounded-2xl border border-zinc-900 space-y-6">
+        <div className="glass p-6 sm:p-8 rounded-2xl border border-zinc-900 space-y-6 relative z-30">
           <h2 className="font-display font-extrabold text-sm text-zinc-100 border-b border-zinc-900 pb-3 flex items-center gap-2">
             <span>1. Startup Environment</span>
           </h2>
@@ -392,7 +392,7 @@ export default function AuditFormPage() {
         </div>
 
         {/* 2. Visual Stack Selector Grid */}
-        <div className="glass p-6 sm:p-8 rounded-2xl border border-zinc-900 space-y-6">
+        <div className="glass p-6 sm:p-8 rounded-2xl border border-zinc-900 space-y-6 relative z-20">
           <h2 className="font-display font-extrabold text-sm text-zinc-100 border-b border-zinc-900 pb-3 flex items-center gap-2">
             <span>2. Select Your AI Stack</span>
           </h2>
@@ -441,7 +441,7 @@ export default function AuditFormPage() {
         </div>
 
         {/* 3. Tool Configurations Card */}
-        <div className="glass p-6 sm:p-8 rounded-2xl border border-zinc-900 space-y-6">
+        <div className="glass p-6 sm:p-8 rounded-2xl border border-zinc-900 space-y-6 relative z-10">
           <h2 className="font-display font-extrabold text-sm text-zinc-100 border-b border-zinc-900 pb-3 flex items-center gap-2">
             <span>3. Current Plan Configurations</span>
           </h2>
@@ -455,6 +455,7 @@ export default function AuditFormPage() {
                 <div 
                   key={idx} 
                   className="p-5 rounded-xl border border-zinc-900 bg-zinc-900/10 relative group space-y-4 hover:border-zinc-800 transition"
+                  style={{ zIndex: tools.length - idx }}
                 >
                   {/* Remove Button */}
                   <button
