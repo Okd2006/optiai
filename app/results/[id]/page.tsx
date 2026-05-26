@@ -341,7 +341,7 @@ export default function ResultsPage() {
   const [benchmarkProfile, setBenchmarkProfile] = useState<'saas' | 'ai-first' | 'seed' | 'growth'>('saas');
   const [timeElapsed, setTimeElapsed] = useState('Just now');
 
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const chatContainerRef = useRef<HTMLDivElement>(null);
   const snapshotRef = useRef<SVGSVGElement>(null);
 
   useEffect(() => {
@@ -378,8 +378,11 @@ export default function ResultsPage() {
   }, [audit]);
 
   useEffect(() => {
-    if (messages.length > 1) {
-      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (messages.length > 1 && chatContainerRef.current) {
+      chatContainerRef.current.scrollTo({
+        top: chatContainerRef.current.scrollHeight,
+        behavior: 'smooth'
+      });
     }
   }, [messages]);
 
@@ -997,7 +1000,7 @@ export default function ResultsPage() {
           </div>
 
           {/* Messages Area */}
-          <div className="flex-1 overflow-y-auto space-y-3 py-3 pr-1 scrollbar-thin scrollbar-thumb-slate-850 scrollbar-track-transparent">
+          <div ref={chatContainerRef} className="flex-1 overflow-y-auto space-y-3 py-3 pr-1 scrollbar-thin scrollbar-thumb-slate-850 scrollbar-track-transparent">
             {messages.map((msg, index) => {
               const isUser = msg.role === 'user';
               return (
@@ -1037,7 +1040,6 @@ export default function ResultsPage() {
                 <span>{chatError}</span>
               </div>
             )}
-            <div ref={messagesEndRef} />
           </div>
 
           {/* Quick Suggestion Chips */}
